@@ -12,7 +12,6 @@
   --player-button: #f7f5f3;
   --player-button-hover: #f2f0ee;
   --player-channel: #f5f3f1;
-  --sidebar-left-width: 200px;
 }
 
 /* Ocultar micrográficos móviles en desktop */
@@ -1482,55 +1481,20 @@ body.has-scroll-init .project[data-scroll].is-inview {
 }
 
 /* ===== NAVIGATION ===== */
-.sidebar-left {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: var(--sidebar-left-width);
-  height: 100vh;
-  padding: 20px 20px 30px 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  z-index: 999;
-  mix-blend-mode: difference;
-  pointer-events: none;
-}
-
-.sidebar-button {
-  font-family: 'ABCDiatypeMono', monospace;
-  font-size: 24px;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  color: #FFFFFF;
-  cursor: pointer;
-  background: none;
-  border: none;
-  text-align: left;
-  padding: 0;
-  line-height: 1.0;
-  pointer-events: auto;
-}
-
-.sidebar-button:hover {
-  text-decoration: underline;
-}
-
 .top-nav {
   position: fixed;
-  top: 20px;
-  left: var(--sidebar-left-width);
-  right: 32px;
-  padding: 0 20px;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 0 0 0;
   z-index: 999;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   mix-blend-mode: difference;
   pointer-events: none;
 }
 
 .nav-title {
+  position: absolute;
+  top: 40px;
   font-family: 'ABCDiatypeMono', monospace;
   font-size: 24px;
   font-weight: 400;
@@ -1539,6 +1503,38 @@ body.has-scroll-init .project[data-scroll].is-inview {
   line-height: 1.0;
   text-decoration: none;
   pointer-events: auto;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+/* 1. efe_defede — alineado con borde izq de imágenes (left-panel padding: 40px) */
+.nav-title:nth-child(1) {
+  left: 40px;
+}
+
+/* 2. work selected — punto medio entre efe_defede (40px) y holomate play (40.74vw + 24px) */
+.nav-title:nth-child(2) {
+  left: calc((40px + 40.74vw + 24px) / 2);
+}
+
+/* 3. holomate play — alineado con inicio contenido center-panel (40.74vw + 24px padding) */
+.nav-title:nth-child(3) {
+  left: calc(40.74vw + 24px);
+}
+
+/* 4. playground — punto medio entre holomate play y contacto & info */
+.nav-title:nth-child(4) {
+  left: calc((40.74vw + 24px + 100vw - 40px) / 2);
+  transform: translateX(-50%);
+}
+
+/* 5. contacto & info — simétrico a efe_defede, desde la derecha */
+.nav-title:nth-child(5) {
+  right: 40px;
+  left: auto;
+  text-align: right;
 }
 
 .nav-title:hover {
@@ -1553,18 +1549,6 @@ body.has-scroll-init .project[data-scroll].is-inview {
   display: block;
 }
 
-.nav-email-label {
-  display: block;
-  font-family: 'ABCDiatypeMono', monospace;
-  font-size: 14px;
-  font-weight: 400;
-  color: #FFFFFF;
-  letter-spacing: 0;
-  text-decoration: none;
-  pointer-events: none;
-  margin-top: 6px;
-}
-
 .time-colon {
   animation: blink-colon 1s step-end infinite;
 }
@@ -1576,10 +1560,9 @@ body.has-scroll-init .project[data-scroll].is-inview {
 
 /* ===== CONTENT SECTIONS ===== */
 .content-section {
-  margin-left: var(--sidebar-left-width);
-  width: calc(100% - var(--sidebar-left-width));
+  width: 100%;
   min-height: 100vh;
-  padding: 120px 32px 100px 20px;
+  padding: 120px 40px 100px 40px;
   position: relative;
   z-index: 1;
 }
@@ -1646,18 +1629,15 @@ body.pignatta-active {
 
 /* ===== NAVIGATION MOBILE OVERRIDES ===== */
 @media (max-width: 768px) {
-  .sidebar-left,
   .top-nav {
     display: none;
   }
 
   .main-container {
-    margin-left: 0;
     width: 100vw;
   }
 
   .content-section {
-    margin-left: 0;
     width: 100%;
   }
 }
