@@ -117,7 +117,7 @@ body {
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 40px 40px 40px 40px;
+  padding: 100px 40px 40px 40px;
 }
 
 .left-projects-panel::-webkit-scrollbar {
@@ -134,7 +134,7 @@ body {
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 40px 24px 40px 24px;
+  padding: 100px 24px 40px 24px;
 }
 
 .center-info-panel::-webkit-scrollbar {
@@ -151,7 +151,7 @@ body {
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 40px 24px 40px 24px;
+  padding: 100px 24px 40px 24px;
   display: flex;
   flex-direction: column;
 }
@@ -1524,10 +1524,9 @@ body.has-scroll-init .project[data-scroll].is-inview {
   left: calc(40.74vw + 24px);
 }
 
-/* 4. playground — punto medio entre holomate play y contacto & info */
+/* 4. playground — alineado con inicio contenido right-panel (70.37vw + 24px padding) */
 .nav-title:nth-child(4) {
-  left: calc((40.74vw + 24px + 100vw - 40px) / 2);
-  transform: translateX(-50%);
+  left: calc(70.37vw + 24px);
 }
 
 /* 5. contacto & info — simétrico a efe_defede, desde la derecha */
