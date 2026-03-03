@@ -87,46 +87,6 @@
     </a>
   </nav>
 
-  <!-- Floating Radio Player -->
-  <div id="floatingRadio" class="floating-radio">
-    <div class="floating-radio-header" id="radioHeader">
-      <div class="floating-radio-left">
-        <button class="sound-control-btn play-btn" onclick="event.stopPropagation(); soundTogglePlayPause()" id="soundPlayBtn">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M3 0v12l9-6z" fill="currentColor"/>
-          </svg>
-        </button>
-        <span class="floating-radio-title">Radio Imaginaria</span>
-      </div>
-      <div class="floating-radio-bars" id="radioBars">
-        <span class="radio-bar"></span>
-        <span class="radio-bar"></span>
-        <span class="radio-bar"></span>
-        <span class="radio-bar"></span>
-      </div>
-    </div>
-    <div class="floating-radio-body">
-      <div class="floating-radio-controls">
-        <button class="sound-control-btn" onclick="soundPreviousTrack()" title="Anterior">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M0 0v12h3V0zM3 6l9-6v12z" fill="currentColor"/></svg>
-        </button>
-        <button class="sound-control-btn" onclick="soundNextTrack()" title="Siguiente">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M12 0v12H9V0zM9 6L0 0v12z" fill="currentColor"/></svg>
-        </button>
-        <button class="sound-control-btn pause-btn" onclick="soundStop()" title="Detener">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect width="12" height="12" fill="currentColor"/></svg>
-        </button>
-      </div>
-      <div class="floating-radio-channels">
-        <div class="sound-channel-item selected" onclick="soundSelectChannel(0)">CH 01: PRÓXIMAMENTE</div>
-        <div class="sound-channel-item" onclick="soundSelectChannel(1)">CH 02: PRÓXIMAMENTE</div>
-        <div class="sound-channel-item" onclick="soundSelectChannel(2)">CH 03: PRÓXIMAMENTE</div>
-        <div class="sound-channel-item" onclick="soundSelectChannel(3)">CH 04: PRÓXIMAMENTE</div>
-        <div class="sound-channel-item" onclick="soundSelectChannel(4)">CH 05: PRÓXIMAMENTE</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Image trail container -->
   <div class="image-trail" id="image-trail"></div>
 
