@@ -974,67 +974,93 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     order: 3;
   }
 
-  /* === PANEL DE PROYECTOS — TARJETAS HORIZONTALES === */
+  /* === PANEL DE PROYECTOS — CARDS SCATTERED === */
   .left-projects-panel {
     width: 100%;
-    height: auto;
+    height: 70vh;
     border: none;
     flex: none;
     order: 2;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 0 24px;
-    gap: 14px;
-    padding: 28px 24px 32px 24px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
   }
 
   .left-projects-panel::-webkit-scrollbar {
     display: none;
   }
 
-  /* === TARJETA DE PROYECTO (ESTADO CERRADO) === */
+  /* === TARJETA DE PROYECTO (SCATTERED) === */
   .project {
-    flex: 0 0 68vw;
-    min-width: 68vw;
-    scroll-snap-align: center;
-    border-radius: 16px;
+    position: absolute;
+    width: 42vw;
+    height: 28vh;
+    border-radius: 12px;
     overflow: hidden;
-    position: relative;
-    height: 55vh;
-    margin-bottom: 0;
     cursor: pointer;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 box-shadow 0.4s ease,
-                border-radius 0.4s ease,
-                width 0.4s ease,
-                height 0.4s ease;
+                border-radius 0.4s ease;
   }
 
-  /* Rotación sutil alterna */
-  .project:nth-child(odd) {
-    transform: rotate(-2deg);
+  /* Card 1 — arriba izquierda */
+  .project:nth-child(1) {
+    top: 4%;
+    left: 4%;
+    transform: rotate(-6deg);
+    z-index: 2;
   }
 
-  .project:nth-child(even) {
-    transform: rotate(2.5deg);
+  /* Card 2 — arriba derecha */
+  .project:nth-child(2) {
+    top: 2%;
+    right: 8%;
+    left: auto;
+    transform: rotate(4deg);
+    z-index: 3;
   }
 
-  .project:first-child {
-    margin-top: 0;
-    margin-left: 4px;
+  /* Card 3 — centro, encima de todo */
+  .project:nth-child(3) {
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    z-index: 5;
+    width: 46vw;
+    height: 30vh;
   }
 
-  .project:last-child {
-    margin-right: 4px;
+  /* Card 4 — derecha medio */
+  .project:nth-child(4) {
+    top: 28%;
+    right: 2%;
+    left: auto;
+    transform: rotate(6deg);
+    z-index: 4;
+    width: 38vw;
+    height: 26vh;
+  }
+
+  /* Card 5 — abajo izquierda */
+  .project:nth-child(5) {
+    bottom: 8%;
+    left: 6%;
+    top: auto;
+    transform: rotate(3deg);
+    z-index: 3;
+  }
+
+  /* Card 6 — abajo derecha */
+  .project:nth-child(6) {
+    bottom: 4%;
+    right: 4%;
+    left: auto;
+    top: auto;
+    transform: rotate(-4deg);
+    z-index: 2;
+    width: 38vw;
+    height: 24vh;
   }
 
   /* Cover: media ocupa toda la tarjeta */
@@ -1152,6 +1178,8 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100vw;
     height: 100vh;
     z-index: 500;
@@ -1159,12 +1187,9 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     background: var(--white);
     overflow-y: auto;
     overflow-x: hidden;
-    transform: rotate(0deg) !important;
+    transform: none !important;
     box-shadow: none;
     padding: 60px 16px 40px;
-    scroll-snap-align: none;
-    flex: none;
-    min-width: 100vw;
   }
 
   .project.expanded .project-media {
