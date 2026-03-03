@@ -285,21 +285,31 @@ class SimpleCarousel {
     }
   }
   
+  // Verificar si el carousel está en modo tarjeta (no expandido) en mobile
+  isCardMode() {
+    if (window.innerWidth > 768) return false;
+    const project = this.carousel.closest('.project');
+    return project && !project.classList.contains('expanded');
+  }
+
   // NUEVOS MÉTODOS TOUCH OPTIMIZADOS
   handleTouchStart(e) {
+    // En modo tarjeta, no procesar touch del carousel
+    if (this.isCardMode()) return;
+
     this.touchStartX = e.touches[0].clientX;
     this.touchStartY = e.touches[0].clientY;
     this.touchStartTime = Date.now();
     this.isTouchActive = true;
     this.hasMovedHorizontally = false;
-    
+
     // Pausar transición durante el touch
     this.track.style.transition = 'none';
   }
   
   handleTouchMove(e) {
-    if (!this.isTouchActive) return;
-    
+    if (!this.isTouchActive || this.isCardMode()) return;
+
     const currentX = e.touches[0].clientX;
     const currentY = e.touches[0].clientY;
     const deltaX = currentX - this.touchStartX;
@@ -321,7 +331,7 @@ class SimpleCarousel {
   }
   
   handleTouchEnd(e) {
-    if (!this.isTouchActive) return;
+    if (!this.isTouchActive || this.isCardMode()) return;
     
     this.touchEndX = e.changedTouches[0].clientX;
     this.touchEndY = e.changedTouches[0].clientY;
@@ -503,6 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     initCarousels();
     soundSelectChannel(0);
+    initLocoScroll();
     console.log('✅ Inicialización completa');
   }, 100);
 });
@@ -538,7 +549,125 @@ window.addEventListener('beforeunload', () => {
   unlockScrollSmooth();
 });
 
-console.log('Script cargado - v6.0 Mobile Fix');
+// ===== LOCOMOTIVE SCROLL (SMOOTH KINETICS) =====
+let locoScroll = null;
+
+// --- Smooth scroll per-panel (desktop) ---
+class SmoothPanel {
+  constructor(el) {
+    this.el = el;
+    this.target = el.scrollTop;
+    this.current = el.scrollTop;
+    this.ease = 0.03;
+    this.rafId = null;
+
+    this.onWheel = this.onWheel.bind(this);
+    this.update = this.update.bind(this);
+
+    el.addEventListener('wheel', this.onWheel, { passive: false });
+  }
+
+  onWheel(e) {
+    e.preventDefault();
+
+    // Normalizar delta según deltaMode (pixels / lines / pages)
+    let delta = e.deltaY;
+    if (e.deltaMode === 1) delta *= 40;
+    if (e.deltaMode === 2) delta *= 800;
+
+    const maxScroll = this.el.scrollHeight - this.el.clientHeight;
+
+    // Sincronizar con posición real si no hay animación activa
+    if (!this.rafId) {
+      this.current = this.el.scrollTop;
+      this.target = this.current;
+    }
+
+    this.target = Math.max(0, Math.min(this.target + delta, maxScroll));
+
+    if (!this.rafId) {
+      this.rafId = requestAnimationFrame(this.update);
+    }
+  }
+
+  update() {
+    this.current += (this.target - this.current) * this.ease;
+
+    if (Math.abs(this.target - this.current) < 0.5) {
+      this.current = this.target;
+      this.el.scrollTop = this.current;
+      this.rafId = null;
+      return;
+    }
+
+    this.el.scrollTop = this.current;
+    this.rafId = requestAnimationFrame(this.update);
+  }
+
+  destroy() {
+    this.el.removeEventListener('wheel', this.onWheel);
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
+}
+
+let smoothPanels = [];
+
+function initPanelSmoothScroll() {
+  smoothPanels.forEach(p => p.destroy());
+  smoothPanels = [];
+
+  if (window.innerWidth <= 768) return;
+
+  document.querySelectorAll('.left-projects-panel, .center-info-panel, .right-bio-panel').forEach(panel => {
+    smoothPanels.push(new SmoothPanel(panel));
+  });
+
+  console.log(`✅ Smooth scroll activado en ${smoothPanels.length} paneles`);
+}
+
+// --- Locomotive Scroll init ---
+function initLocoScroll() {
+  if (typeof LocomotiveScroll === 'undefined') {
+    console.warn('LocomotiveScroll no disponible');
+    return;
+  }
+
+  if (locoScroll) {
+    locoScroll.destroy();
+    locoScroll = null;
+    document.body.classList.remove('has-scroll-init');
+  }
+
+  const isDesktop = window.innerWidth > 768;
+
+  locoScroll = new LocomotiveScroll({
+    lenisOptions: {
+      lerp: 0.03,
+      smoothWheel: !isDesktop, // Mobile: Lenis en body. Desktop: SmoothPanel en cada panel
+      smoothTouch: false,
+      normalizeWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    }
+  });
+
+  // Desktop: smooth scroll per-panel
+  initPanelSmoothScroll();
+
+  // Activar reveal CSS después de que IntersectionObserver procese los elementos visibles
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.body.classList.add('has-scroll-init');
+    });
+  });
+
+  console.log(`✅ Locomotive Scroll inicializado (${isDesktop ? 'desktop: panels + reveal' : 'mobile: smooth + reveal'})`);
+}
+
+console.log('Script cargado - v8.0 Locomotive Scroll');
 console.log('Web diseñada por Pignatta - Codificada con IA como copiloto');
 
 // ===== LIGHTBOX VIDEO =====
@@ -593,3 +722,433 @@ closeLightbox = function() {
   
   originalCloseLightbox();
 };
+
+// ===== MOBILE: GESTURE SYSTEM (IG-LIKE) =====
+
+let expandedProject = null;
+
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+// --- Constantes de gestos ---
+const GESTURE = {
+  TAP_MAX_DIST: 12,      // px — desplazamiento máximo para un tap
+  TAP_MAX_TIME: 280,     // ms — duración máxima para un tap
+  DIRECTION_LOCK: 10,    // px — movimiento antes de comprometer dirección
+};
+
+// --- Expand / Collapse ---
+function expandProject(projectEl) {
+  if (!isMobile() || expandedProject) return;
+
+  if (locoScroll) locoScroll.stop();
+
+  expandedProject = projectEl;
+  projectEl.classList.add('expanded');
+  document.body.style.overflow = 'hidden';
+
+  const carousel = projectEl.querySelector('.project-carousel');
+  if (carousel) {
+    projectEl._expandedCarousel = new SimpleCarousel(carousel, 99);
+  }
+
+  // Swipe-down para cerrar
+  projectEl.addEventListener('touchstart', handleSwipeDownStart, { passive: true });
+  projectEl.addEventListener('touchmove', handleSwipeDownMove, { passive: false });
+  projectEl.addEventListener('touchend', handleSwipeDownEnd, { passive: true });
+}
+
+function collapseProject(e) {
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+  if (!expandedProject) return;
+
+  const projectEl = expandedProject;
+
+  projectEl.removeEventListener('touchstart', handleSwipeDownStart);
+  projectEl.removeEventListener('touchmove', handleSwipeDownMove);
+  projectEl.removeEventListener('touchend', handleSwipeDownEnd);
+
+  projectEl.classList.remove('expanded');
+  projectEl.style.transform = '';
+  projectEl.style.opacity = '';
+  projectEl.style.borderRadius = '';
+  document.body.style.overflow = '';
+
+  expandedProject = null;
+  if (locoScroll) locoScroll.start();
+}
+
+// --- Swipe down to close (expanded) ---
+let swipeDownStartY = 0;
+let swipeDownActive = false;
+
+function handleSwipeDownStart(e) {
+  if (!expandedProject) return;
+  if (expandedProject.scrollTop <= 0) {
+    swipeDownStartY = e.touches[0].clientY;
+    swipeDownActive = true;
+  } else {
+    swipeDownActive = false;
+  }
+}
+
+function handleSwipeDownMove(e) {
+  if (!swipeDownActive || !expandedProject) return;
+
+  const deltaY = e.touches[0].clientY - swipeDownStartY;
+
+  if (deltaY > 0 && expandedProject.scrollTop <= 0) {
+    e.preventDefault();
+    const progress = Math.min(deltaY / 300, 1);
+    expandedProject.style.transform = `translateY(${deltaY * 0.5}px) scale(${1 - progress * 0.05})`;
+    expandedProject.style.opacity = 1 - progress * 0.3;
+    expandedProject.style.borderRadius = `${progress * 16}px`;
+  }
+}
+
+function handleSwipeDownEnd(e) {
+  if (!swipeDownActive || !expandedProject) return;
+
+  const deltaY = e.changedTouches[0].clientY - swipeDownStartY;
+
+  if (deltaY > 120) {
+    collapseProject();
+  } else {
+    expandedProject.style.transform = 'rotate(0deg)';
+    expandedProject.style.opacity = '1';
+    expandedProject.style.borderRadius = '0';
+  }
+  swipeDownActive = false;
+}
+
+// --- Panel-level gesture handler (tap vs scroll) ---
+function initMobileGestures() {
+  if (!isMobile()) return;
+
+  const panel = document.querySelector('.left-projects-panel');
+  if (!panel) return;
+
+  let startX = 0;
+  let startY = 0;
+  let startTime = 0;
+  let hasMoved = false;
+  let targetProject = null;
+
+  // touchstart: registrar origen y proyecto target
+  panel.addEventListener('touchstart', (e) => {
+    if (expandedProject) return;
+
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    startTime = Date.now();
+    hasMoved = false;
+    targetProject = e.target.closest('.project');
+  }, { passive: true });
+
+  // touchmove: marcar como scroll si supera threshold
+  panel.addEventListener('touchmove', (e) => {
+    if (expandedProject || hasMoved) return;
+
+    const dx = Math.abs(e.touches[0].clientX - startX);
+    const dy = Math.abs(e.touches[0].clientY - startY);
+
+    if (dx > GESTURE.TAP_MAX_DIST || dy > GESTURE.TAP_MAX_DIST) {
+      hasMoved = true;
+    }
+    // No preventDefault: el browser maneja scroll horizontal (snap) y vertical nativamente
+  }, { passive: true });
+
+  // touchend: si fue tap, abrir proyecto
+  panel.addEventListener('touchend', (e) => {
+    if (expandedProject) return;
+
+    const elapsed = Date.now() - startTime;
+    const dx = Math.abs(e.changedTouches[0].clientX - startX);
+    const dy = Math.abs(e.changedTouches[0].clientY - startY);
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (!hasMoved && dist < GESTURE.TAP_MAX_DIST && elapsed < GESTURE.TAP_MAX_TIME && targetProject) {
+      e.preventDefault();
+      expandProject(targetProject);
+    }
+
+    targetProject = null;
+  }, { passive: false });
+}
+
+// Inicializar gestos mobile en DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initMobileGestures();
+});
+
+// Re-inicializar en resize (por si cambia de desktop a mobile)
+let resizeTimeout;
+let lastScreenMode = window.innerWidth > 768 ? 'desktop' : 'mobile';
+
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (expandedProject && !isMobile()) {
+      collapseProject();
+    }
+
+    // Reinicializar LS si cambió de modo desktop <-> mobile
+    const currentMode = window.innerWidth > 768 ? 'desktop' : 'mobile';
+    if (currentMode !== lastScreenMode) {
+      lastScreenMode = currentMode;
+      initLocoScroll();
+    }
+  }, 200);
+});
+
+// ===== SECTION SWITCHING =====
+let currentSection = 'work';
+
+function switchSection(section) {
+  const workContent = document.getElementById('work-content');
+  const playgroundContent = document.getElementById('playground-content');
+  const spamContent = document.getElementById('spam-content');
+  const infoContent = document.getElementById('info-content');
+  const pignattaContent = document.getElementById('pignatta-content');
+
+  const allSections = {
+    work: workContent,
+    playground: playgroundContent,
+    spam: spamContent,
+    info: infoContent,
+    pignatta: pignattaContent
+  };
+
+  // Hide all sections
+  Object.values(allSections).forEach(s => {
+    if (s) {
+      if (s === workContent) {
+        s.classList.add('hidden');
+      } else {
+        s.classList.add('hidden');
+      }
+    }
+  });
+
+  // Remove all body section classes
+  document.body.classList.remove('spam-active', 'info-active', 'playground-active', 'pignatta-active');
+
+  // Show selected section
+  if (allSections[section]) {
+    allSections[section].classList.remove('hidden');
+    currentSection = section;
+
+    // Apply body class for background
+    if (section === 'spam') document.body.classList.add('spam-active');
+    if (section === 'playground') document.body.classList.add('playground-active');
+    if (section === 'info') document.body.classList.add('info-active');
+    if (section === 'pignatta') document.body.classList.add('pignatta-active');
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+    if (locoScroll) {
+      locoScroll.scrollTo(0, { duration: 0 });
+    }
+  }
+
+  // Update active nav link
+  document.querySelectorAll('.nav-title[data-section]').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('data-section') === section);
+  });
+}
+
+// Nav link click handlers
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-section]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const section = link.getAttribute('data-section');
+      switchSection(section);
+    });
+  });
+
+  // Sidebar button (efe_defede) → toggles pignatta/archive section
+  const sidebarBtn = document.getElementById('sidebarBtn');
+  if (sidebarBtn) {
+    sidebarBtn.addEventListener('click', () => {
+      const isPignattaActive = document.body.classList.contains('pignatta-active');
+      if (!isPignattaActive) {
+        switchSection('pignatta');
+      } else {
+        switchSection('work');
+      }
+    });
+  }
+
+  // ESC key to return to work
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && currentSection !== 'work') {
+      switchSection('work');
+    }
+  });
+});
+
+// ===== IMAGE TRAIL EFFECT (LEARNING STUDIO) =====
+const trailImages = [
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=300&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=300&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=300&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=300&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=400&fit=crop'
+];
+
+let trailContainer = null;
+let imgIndex = 0;
+let lastTrailX = 0;
+let lastTrailY = 0;
+let currentMouseX = window.innerWidth / 2;
+let currentMouseY = window.innerHeight / 2;
+const trailThreshold = 65;
+let activeTrailImages = [];
+let exitingTrailImages = [];
+const exitSpeed = 8;
+
+// Preload trail images
+trailImages.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
+
+function createTrailImage(x, y) {
+  if (!trailContainer) return;
+
+  const img = document.createElement('img');
+  img.className = 'trail-img';
+  img.src = trailImages[imgIndex];
+
+  const peakRotation = (Math.random() - 0.5) * 8;
+
+  img.style.left = (x - 100) + 'px';
+  img.style.top = (y - 100) + 'px';
+  img.style.opacity = '1';
+  img.style.transform = 'scale(0) rotate(0deg)';
+
+  trailContainer.appendChild(img);
+  img.offsetHeight; // Force reflow
+
+  img.style.transition = 'transform 0.55s cubic-bezier(0.3, 0, 0.3, 1)';
+  img.style.transform = 'scale(2.5) rotate(' + peakRotation + 'deg)';
+
+  activeTrailImages.push({
+    img: img,
+    x: x,
+    y: y,
+    peakRotation: peakRotation,
+    createdAt: Date.now()
+  });
+
+  setTimeout(() => {
+    img.style.transition = 'none';
+    exitingTrailImages.push({
+      img: img,
+      x: x,
+      y: y,
+      opacity: 1,
+      scale: 2.5,
+      rotation: peakRotation,
+      peakRotation: peakRotation
+    });
+
+    const idx = activeTrailImages.findIndex(item => item.img === img);
+    if (idx > -1) activeTrailImages.splice(idx, 1);
+  }, 570);
+
+  imgIndex = (imgIndex + 1) % trailImages.length;
+}
+
+function animateExitingImages() {
+  for (let i = exitingTrailImages.length - 1; i >= 0; i--) {
+    const item = exitingTrailImages[i];
+
+    if (item && item.img && item.img.parentNode) {
+      const progress = 1 - (item.scale / 2.5);
+      item.rotation = item.peakRotation * (1 - progress);
+
+      // Move toward mouse cursor
+      if (progress > 0.05) {
+        const dx = currentMouseX - item.x;
+        const dy = currentMouseY - item.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const moveProgress = Math.max(0, progress - 0.05) / 0.95;
+        const easedSpeed = exitSpeed * Math.pow(moveProgress, 5) * 50;
+
+        if (dist > easedSpeed && easedSpeed > 0.05) {
+          const ratio = easedSpeed / dist;
+          item.x += dx * ratio;
+          item.y += dy * ratio;
+          item.img.style.left = (item.x - 100) + 'px';
+          item.img.style.top = (item.y - 100) + 'px';
+        }
+      }
+
+      // Scale down and fade out
+      item.scale -= (0.006 + Math.pow(progress, 4) * 0.5);
+      if (item.scale <= 0.8) item.opacity = item.scale / 0.8;
+
+      item.img.style.opacity = Math.max(0, item.opacity);
+      item.img.style.transform = 'scale(' + Math.max(0, item.scale) + ') rotate(' + item.rotation + 'deg)';
+
+      // Remove when fully faded
+      if (item.scale <= 0) {
+        if (item.img.parentNode) item.img.parentNode.removeChild(item.img);
+        exitingTrailImages.splice(i, 1);
+      }
+    }
+  }
+
+  requestAnimationFrame(animateExitingImages);
+}
+
+// Init trail on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  trailContainer = document.getElementById('image-trail');
+
+  window.addEventListener('mousemove', (e) => {
+    currentMouseX = e.clientX;
+    currentMouseY = e.clientY;
+
+    // Only active when in spam/learning studio section
+    if (currentSection !== 'spam') return;
+
+    const dx = e.clientX - lastTrailX;
+    const dy = e.clientY - lastTrailY;
+
+    if (Math.sqrt(dx * dx + dy * dy) > trailThreshold) {
+      createTrailImage(e.clientX, e.clientY);
+      lastTrailX = e.clientX;
+      lastTrailY = e.clientY;
+    }
+  });
+
+  // Start animation loop
+  animateExitingImages();
+});
+
+// ===== NAV CLOCK (MONTEVIDEO TIMEZONE) =====
+function updateNavClock() {
+  const timeEl = document.getElementById('navClock');
+  if (timeEl) {
+    const now = new Date();
+    const options = {
+      timeZone: 'America/Montevideo',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+    const time = now.toLocaleTimeString('es-UY', options);
+    const parts = time.split(':');
+    timeEl.innerHTML = parts[0] + '<span class="time-colon">:</span>' + parts[1];
+  }
+}
+
+updateNavClock();
+setInterval(updateNavClock, 1000);

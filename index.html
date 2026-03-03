@@ -6,9 +6,16 @@
   <title>Federico Pignatta — Proyecto</title>
   
   <!-- FONTS -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
-  
+  <style>
+    @font-face {
+      font-family: 'ABCDiatypeMono';
+      src: url('fonts/ABCDiatypeMono-Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+
   <!-- CSS CRÍTICO INLINE -->
   <style>
     .carousel-track {
@@ -23,16 +30,106 @@
     }
     .carousel-slide img {
       width: 100% !important;
-      height: auto !important;
       display: block !important;
       user-select: none !important;
     }
+    /* En desktop: height auto. En mobile tarjeta: height 100% */
+    @media (min-width: 769px) {
+      .carousel-slide img {
+        height: auto !important;
+      }
+    }
+    @media (max-width: 768px) {
+      .project:not(.expanded) .carousel-slide img {
+        height: 100% !important;
+        object-fit: cover !important;
+      }
+      .project.expanded .carousel-slide img {
+        height: auto !important;
+        object-fit: contain !important;
+      }
+      .project:not(.expanded) .carousel-slide {
+        height: 100% !important;
+      }
+      .project:not(.expanded) .carousel-track {
+        height: 100% !important;
+      }
+    }
   </style>
   
+  <!-- LOCOMOTIVE SCROLL -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@5.0.1/bundled/locomotive-scroll.css">
+
   <!-- CSS PRINCIPAL -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Navigation -->
+  <aside class="sidebar-left">
+    <button class="sidebar-button" id="sidebarBtn">efe_defede</button>
+  </aside>
+
+  <nav class="top-nav">
+    <a href="#" class="nav-title active" data-section="work">
+      <span class="nav-title-line">work</span>
+      <span class="nav-title-line">selected</span>
+    </a>
+    <a href="#" class="nav-title" data-section="playground">
+      <span class="nav-title-line">holomate</span>
+      <span class="nav-title-line">play</span>
+    </a>
+    <a href="#" class="nav-title" data-section="spam">
+      <span class="nav-title-line">playground</span>
+    </a>
+    <a href="#" class="nav-title" data-section="info">
+      <span class="nav-title-line">contacto</span>
+      <span class="nav-title-line">& info</span>
+    </a>
+  </nav>
+
+  <!-- Floating Radio Player -->
+  <div id="floatingRadio" class="floating-radio">
+    <div class="floating-radio-header" id="radioHeader">
+      <div class="floating-radio-left">
+        <button class="sound-control-btn play-btn" onclick="event.stopPropagation(); soundTogglePlayPause()" id="soundPlayBtn">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M3 0v12l9-6z" fill="currentColor"/>
+          </svg>
+        </button>
+        <span class="floating-radio-title">Radio Imaginaria</span>
+      </div>
+      <div class="floating-radio-bars" id="radioBars">
+        <span class="radio-bar"></span>
+        <span class="radio-bar"></span>
+        <span class="radio-bar"></span>
+        <span class="radio-bar"></span>
+      </div>
+    </div>
+    <div class="floating-radio-body">
+      <div class="floating-radio-controls">
+        <button class="sound-control-btn" onclick="soundPreviousTrack()" title="Anterior">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M0 0v12h3V0zM3 6l9-6v12z" fill="currentColor"/></svg>
+        </button>
+        <button class="sound-control-btn" onclick="soundNextTrack()" title="Siguiente">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M12 0v12H9V0zM9 6L0 0v12z" fill="currentColor"/></svg>
+        </button>
+        <button class="sound-control-btn pause-btn" onclick="soundStop()" title="Detener">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect width="12" height="12" fill="currentColor"/></svg>
+        </button>
+      </div>
+      <div class="floating-radio-channels">
+        <div class="sound-channel-item selected" onclick="soundSelectChannel(0)">CH 01: PRÓXIMAMENTE</div>
+        <div class="sound-channel-item" onclick="soundSelectChannel(1)">CH 02: PRÓXIMAMENTE</div>
+        <div class="sound-channel-item" onclick="soundSelectChannel(2)">CH 03: PRÓXIMAMENTE</div>
+        <div class="sound-channel-item" onclick="soundSelectChannel(3)">CH 04: PRÓXIMAMENTE</div>
+        <div class="sound-channel-item" onclick="soundSelectChannel(4)">CH 05: PRÓXIMAMENTE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image trail container -->
+  <div class="image-trail" id="image-trail"></div>
+
   <!-- Barra de reflexiones inferior -->
   <div class="reflection-bar" id="reflectionBar">
     <div class="reflection-content" id="reflectionContent">
@@ -41,12 +138,13 @@
     <button class="reflection-close" onclick="closeReflectionBar()">×</button>
   </div>
 
-  <div class="main-container">
+  <div class="main-container" id="work-content">
     
     <!-- Panel Izquierdo - Proyectos -->
     <div class="left-projects-panel">
       
-      <div class="project">
+      <div class="project" data-scroll>
+        <button class="project-close-btn" onclick="collapseProject(event)">×</button>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -99,7 +197,8 @@ con experiencia digital para la creación musical colaborativa.
         </div>
       </div>
 
-      <div class="project">
+      <div class="project" data-scroll>
+        <button class="project-close-btn" onclick="collapseProject(event)">×</button>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -137,7 +236,8 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project">
+      <div class="project" data-scroll>
+        <button class="project-close-btn" onclick="collapseProject(event)">×</button>
         <div class="project-media square-video-container">
           <video class="square-video" autoplay loop muted playsinline onclick="if(window.innerWidth > 768) openLightboxVideo(this.src)">
             <source src="https://i.imgur.com/lM5fRyp.mp4" type="video/mp4">
@@ -163,7 +263,8 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project">
+      <div class="project" data-scroll>
+        <button class="project-close-btn" onclick="collapseProject(event)">×</button>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -202,7 +303,8 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project">
+      <div class="project" data-scroll>
+        <button class="project-close-btn" onclick="collapseProject(event)">×</button>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -238,7 +340,8 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project">
+      <div class="project" data-scroll>
+        <button class="project-close-btn" onclick="collapseProject(event)">×</button>
         <div class="project-media">
           <img src="https://i.imgur.com/ZpTQBFH.jpeg" alt="Identidad visual" class="single-image" onclick="if(window.innerWidth > 768) openLightbox('https://i.imgur.com/ZpTQBFH.jpeg')">
         </div>
@@ -262,7 +365,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
     <!-- Panel Central - Información complementaria -->
     <div class="center-info-panel">
       
-      <div class="info-section">
+      <div class="info-section" data-scroll>
         <div class="info-title">→ Educación</div>
         <div class="info-item">
           <div>Licenciatura en Artes Visuales — en proceso de tesis</div>
@@ -278,7 +381,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="info-section">
+      <div class="info-section" data-scroll>
         <div class="info-title">→ Experiencia</div>
         <div class="info-item">
           <div>Diseñador Gráfico Senior</div>
@@ -290,7 +393,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="info-section">
+      <div class="info-section" data-scroll>
         <div class="info-title">→ Enseñanza</div>
         <div class="info-item">
           <div>2018-2021 Talleres de arte y comunicación (PAS)</div>
@@ -298,7 +401,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="info-section">
+      <div class="info-section" data-scroll>
         <div class="info-title">→ Trabajos destacados por</div>
         <div class="info-item compact">
           <a href="https://www.buenosaliens.com/notas.cfm/cod.83068.t.controlador-made-in-montevideo.htm" target="_blank">2024 BUENOS ALIENS</a>
@@ -314,7 +417,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="info-section">
+      <div class="info-section" data-scroll>
         <div class="info-title">→ Proyectos colaborativos de autoría</div>
         <div class="info-item compact">
           <a href="https://play.holomate.cc" target="_blank">HOLOMATE PLAY</a>
@@ -327,7 +430,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="info-section">
+      <div class="info-section" data-scroll>
         <div class="info-title">→ Social</div>
         <div class="info-item compact">
           <a href="https://instagram.com/efe_defede" target="_blank">INSTAGRAM</a>
@@ -340,7 +443,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="sound-section">
+      <div class="sound-section" data-scroll>
         <div class="sound-player-full">
           <div class="sound-player-controls">
             <div class="sound-controls-left">
@@ -379,7 +482,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
       </div>
 
       <!-- Micrográficos móviles -->
-      <div class="mobile-micros-center">
+      <div class="mobile-micros-center" data-scroll>
         <div class="mobile-micros-center-left">
           <div class="mobile-micros-center-line">
             ÚLTIMA
@@ -400,9 +503,9 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
 
     <!-- Panel Derecho - Bio y contacto -->
     <div class="right-bio-panel">
-      <h1 class="studio-name">Pignatta</h1>
-      
-      <div class="bio-section">
+      <h1 class="studio-name" data-scroll>Pignatta</h1>
+
+      <div class="bio-section" data-scroll>
         <p class="bio-text">
           Federico Pignatta González es un creador interdisciplinar uruguayo radicado en Montevideo. 
           Se dedica al diseño gráfico, investiga en artes visuales y experimentación sonora.
@@ -414,7 +517,7 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </p>
       </div>
 
-      <div class="contact-section">
+      <div class="contact-section" data-scroll>
         <a href="mailto:hola@pignatta.info" class="contact-link">→ hola@pignatta.info</a>
       </div>
 
@@ -438,6 +541,34 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
 
   </div>
 
+  <!-- Playground section -->
+  <div class="content-section hidden" id="playground-content">
+    <div class="section-inner">
+      <p class="section-placeholder">Holomate play</p>
+    </div>
+  </div>
+
+  <!-- Learning Studio / Spam section -->
+  <div class="content-section hidden" id="spam-content">
+    <div class="section-inner">
+      <p class="section-placeholder spam-label">learning studio</p>
+    </div>
+  </div>
+
+  <!-- Info section -->
+  <div class="content-section hidden" id="info-content">
+    <div class="section-inner">
+      <p class="section-placeholder">info & contacto</p>
+    </div>
+  </div>
+
+  <!-- Pignatta/Archive section -->
+  <div class="content-section hidden" id="pignatta-content">
+    <div class="section-inner">
+      <p class="section-placeholder">pignatta</p>
+    </div>
+  </div>
+
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox">
     <div class="lightbox-content">
@@ -450,6 +581,9 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
       <button class="lightbox-close" onclick="closeLightbox()">×</button>
     </div>
   </div>
+
+  <!-- LOCOMOTIVE SCROLL JS (bundled, incluye Lenis) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/locomotive-scroll@5.0.1/bundled/locomotive-scroll.min.js"></script>
 
   <!-- SCRIPT AL FINAL -->
   <script defer src="script.js"></script>

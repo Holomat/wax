@@ -12,6 +12,7 @@
   --player-button: #f7f5f3;
   --player-button-hover: #f2f0ee;
   --player-channel: #f5f3f1;
+  --sidebar-left-width: 200px;
 }
 
 /* Ocultar micrográficos móviles en desktop */
@@ -27,13 +28,14 @@
 }
 
 body {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'ABCDiatypeMono', monospace;
   font-size: 14px;
   line-height: 1.15;
   color: var(--black);
   background: var(--white);
   overflow-x: hidden;
   font-weight: 400;
+  transition: background-color 0.5s ease;
 }
 
 /* Barra de reflexiones inferior */
@@ -102,6 +104,10 @@ body {
   display: flex;
   height: 100vh;
   width: 100vw;
+}
+
+.main-container.hidden {
+  display: none;
 }
 
 /* Panel izquierdo - Proyectos - 40.74% pantalla */
@@ -257,7 +263,7 @@ body {
 }
 
 .live-clock {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'ABCDiatypeMono', monospace;
   font-size: 11px;
   line-height: 1.15;
   color: var(--gray);
@@ -867,294 +873,6 @@ body {
 }
 
 /* Responsive móvil */
-@media (max-width: 768px) {
-  body {
-    font-size: 12px;
-    line-height: 1.15;
-  }
-
-  /* Ocultar controles de carrusel en móvil */
-  .carousel-controls {
-    display: none;
-  }
-
-  /* Ocultar lightbox en móvil */
-  .lightbox {
-    display: none !important;
-  }
-
-  /* Deshabilitar click en imágenes en móvil */
-  .carousel-slide {
-    cursor: default;
-  }
-
-  .single-image {
-    cursor: default;
-  }
-
-  /* GIF cuadrado en móvil */
-  .square-gif-container {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-  }
-  
-  .square-gif {
-    cursor: default;
-  }
-
-  .reflection-bar {
-    height: 36px;
-  }
-
-  .reflection-content {
-    font-size: 10px;
-    line-height: 1.15;
-    padding-top: 12px;
-    padding-bottom: 12px;
-  }
-
-  .main-container {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-  }
-
-  .left-projects-panel,
-  .center-info-panel,
-  .right-bio-panel {
-    width: 100%;
-    height: auto;
-    border: none;
-    padding: 24px 16px 30px 16px;
-    flex: none;
-  }
-
-  .left-projects-panel {
-    border-bottom: 1px solid #eee;
-    order: 2;
-    padding-top: 8px;
-  }
-
-  .center-info-panel {
-    border-bottom: 1px solid #eee;
-    order: 3;
-  }
-
-  .right-bio-panel {
-    order: 1;
-    padding-bottom: 8px;
-  }
-
-  /* AJUSTES ESPECÍFICOS PARA CONTACTOS EN MÓVIL */
-  .contact-collab {
-    margin-bottom: 4px;
-    margin-top: 14px;
-  }
-
-  .contact-section {
-    margin-bottom: 12px;
-    margin-top: -2px;
-  }
-
-  /* Ocultar micrográficos originales en móvil del panel derecho */
-  .right-bio-panel .time-section {
-    display: none;
-  }
-
-  /* AJUSTE ESPECÍFICO: Subir imagen del primer proyecto */
-  .project:first-child {
-    margin-top: -20px;
-  }
-
-  /* Mostrar micrográficos en panel central - AL FINAL */
-  .mobile-micros-center {
-    display: block;
-    margin-top: 40px;
-    margin-bottom: 30px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    border-top: 1px solid #eee;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    grid-template-areas: "date clock weather";
-    align-items: end;
-    gap: 8px;
-  }
-
-  .mobile-micros-center-left {
-    grid-area: date;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    justify-self: start;
-    align-items: flex-start;
-  }
-
-  .mobile-micros-center-right {
-    grid-area: weather;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    justify-self: end;
-  }
-
-  .mobile-micros-center-line {
-    font-size: 10px;
-    line-height: 1.45;
-    color: var(--gray);
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0px;
-  }
-
-  .project-info-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .project-media {
-    width: 100%;
-  }
-
-  .project {
-    margin-bottom: 60px;
-  }
-
-  .project-left {
-    flex-direction: row;
-    gap: 16px;
-    align-items: baseline;
-  }
-
-  .bio-text {
-    font-size: 12px;
-    line-height: 1.15;
-    margin-bottom: 8px;
-  }
-
-  .bio-section {
-    margin-bottom: 6px;
-  }
-
-  .studio-name {
-    font-size: 12px;
-    line-height: 1.15;
-    margin-bottom: 8px;
-  }
-
-  .info-section {
-    margin-bottom: 16px;
-  }
-
-  .info-title {
-    font-size: 12px;
-    line-height: 1.15;
-    margin-bottom: 4px;
-  }
-
-  /* TEXTOS DE ENLACES - Igualados exactamente a bio */
-  .info-item.compact a {
-    font-size: 12px !important;
-    font-weight: 400 !important;
-    line-height: 1.15 !important;
-    color: var(--black);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .info-item.compact a:hover {
-    color: var(--accent-magenta);
-  }
-
-  /* Asegurar que todos los textos de info-item sean iguales a bio */
-  .info-item {
-    font-size: 12px !important;
-    font-weight: 400 !important;
-    line-height: 1.15 !important;
-    margin-bottom: 4px;
-  }
-
-  .info-description {
-    font-size: 12px;
-    line-height: 1.15;
-  }
-
-  .project-title {
-    font-size: 12px;
-    line-height: 1.15;
-    font-weight: 400;
-  }
-
-  .project-description {
-    font-size: 12px;
-    line-height: 1.15;
-    font-weight: 400;
-  }
-
-  .project-number {
-    font-size: 12px;
-    line-height: 1.15;
-    font-weight: 400;
-  }
-
-  .project-category {
-    font-size: 12px;
-    line-height: 1.15;
-    font-weight: 400;
-  }
-
-  .contact-link {
-    font-size: 12px;
-    margin-bottom: 0;
-    display: inline;
-    white-space: nowrap;
-    line-height: 1.15;
-  }
-
-  .contact-collab {
-    font-size: 12px;
-  }
-
-  .sound-player-full {
-    padding: 6px;
-  }
-
-  .sound-channel-item {
-    font-size: 12px;
-    line-height: 1.15;
-    padding: 5px 6px;
-  }
-
-  /* CORRECCIÓN MÓVIL: Radio Imaginaria mismo tamaño que bio */
-  .sound-brand {
-    font-size: 12px;
-    color: var(--black);
-  }
-
-  .carousel-btn {
-    width: 36px;
-    height: 36px;
-  }
-
-  .time-section {
-    padding-top: 16px;
-    gap: 8px;
-  }
-
-  /* MICROGRÁFICOS EN MÓVIL - 10px */
-  .update-date,
-  .live-clock,
-  .weather-info,
-  .location,
-  .weather-temp,
-  .mobile-micros-center-line {
-    font-size: 10px;
-    line-height: 1.15;
-  }
-}
-
 /* Estilos para video cuadrado (proyecto 3) */
 .square-video-container {
   width: 83.33%;
@@ -1186,14 +904,760 @@ body {
   background: #000;
 }
 
-/* Responsive para móvil */
+/* Botón cerrar proyecto expandido (oculto por defecto) */
+.project-close-btn {
+  display: none;
+}
+
+/* ===== LOCOMOTIVE SCROLL — REVEAL ANIMATIONS ===== */
+body.has-scroll-init .info-section[data-scroll],
+body.has-scroll-init .sound-section[data-scroll],
+body.has-scroll-init .mobile-micros-center[data-scroll] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.has-scroll-init .info-section[data-scroll].is-inview,
+body.has-scroll-init .sound-section[data-scroll].is-inview,
+body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== RESPONSIVE MÓVIL ===== */
 @media (max-width: 768px) {
-  .square-video-container {
+  body {
+    font-size: 12px;
+    line-height: 1.15;
+  }
+
+  /* Ocultar lightbox en móvil */
+  .lightbox {
+    display: none !important;
+  }
+
+  .reflection-bar {
+    height: 36px;
+  }
+
+  .reflection-content {
+    font-size: 10px;
+    line-height: 1.15;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* === LAYOUT PRINCIPAL === */
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .center-info-panel,
+  .right-bio-panel {
     width: 100%;
+    height: auto;
+    border: none;
+    padding: 24px 16px 30px 16px;
+    flex: none;
+  }
+
+  .right-bio-panel {
+    order: 1;
+    padding-bottom: 8px;
+  }
+
+  .center-info-panel {
+    border-bottom: 1px solid #eee;
+    order: 3;
+  }
+
+  /* === PANEL DE PROYECTOS — TARJETAS HORIZONTALES === */
+  .left-projects-panel {
+    width: 100%;
+    height: auto;
+    border: none;
+    flex: none;
+    order: 2;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 24px;
+    gap: 14px;
+    padding: 28px 24px 32px 24px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    align-items: center;
+  }
+
+  .left-projects-panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* === TARJETA DE PROYECTO (ESTADO CERRADO) === */
+  .project {
+    flex: 0 0 68vw;
+    min-width: 68vw;
+    scroll-snap-align: center;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    height: 55vh;
+    margin-bottom: 0;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.4s ease,
+                border-radius 0.4s ease,
+                width 0.4s ease,
+                height 0.4s ease;
+  }
+
+  /* Rotación sutil alterna */
+  .project:nth-child(odd) {
+    transform: rotate(-2deg);
+  }
+
+  .project:nth-child(even) {
+    transform: rotate(2.5deg);
+  }
+
+  .project:first-child {
+    margin-top: 0;
+    margin-left: 4px;
+  }
+
+  .project:last-child {
+    margin-right: 4px;
+  }
+
+  /* Cover: media ocupa toda la tarjeta */
+  .project .project-media {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-bottom: 0;
+  }
+
+  .project .project-media .project-carousel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .project .project-media .carousel-track {
+    height: 100%;
+  }
+
+  .project .project-media .carousel-slide {
+    height: 100%;
+    cursor: default;
+  }
+
+  .project .project-media .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project .project-media .single-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: default;
+  }
+
+  /* Video cover */
+  .project .square-video-container {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    margin-bottom: 0;
+  }
+
+  .project .square-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: default;
+  }
+
+  /* Card mode: permitir pan horizontal nativo (scroll-snap) */
+  .project:not(.expanded) .project-carousel {
+    touch-action: auto;
+  }
+
+  /* Ocultar controles del carousel en modo tarjeta */
+  .project .carousel-controls {
+    display: none;
+  }
+
+  .project .carousel-indicators {
+    display: none;
+  }
+
+  /* Info superpuesta sobre la tarjeta */
+  .project .project-info-grid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px 16px 20px 16px;
+    background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.65) 100%);
+    z-index: 2;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    width: 100%;
+  }
+
+  /* Ocultar descripción y categoría en modo tarjeta */
+  .project .project-description {
+    display: none;
+  }
+
+  .project .project-category {
+    display: none;
+  }
+
+  /* Textos blancos en modo tarjeta */
+  .project .project-title {
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .project .project-number {
+    font-size: 11px;
+    line-height: 1.15;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .project .project-left {
+    flex-direction: row;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  /* === TARJETA EXPANDIDA === */
+  .project.expanded {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 500;
+    border-radius: 0;
+    background: var(--white);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transform: rotate(0deg) !important;
+    box-shadow: none;
+    padding: 60px 16px 40px;
+    scroll-snap-align: none;
+    flex: none;
+    min-width: 100vw;
+  }
+
+  .project.expanded .project-media {
+    position: relative;
+    height: auto;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .project.expanded .project-media .project-carousel {
+    height: auto;
+  }
+
+  .project.expanded .project-media .carousel-track {
+    height: auto;
+  }
+
+  .project.expanded .project-media .carousel-slide {
+    height: auto;
+  }
+
+  .project.expanded .project-media .carousel-slide img {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .project.expanded .project-media .single-image {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .project.expanded .square-video-container {
+    height: auto;
     aspect-ratio: 1 / 1;
   }
-  
-  .square-video {
-    cursor: default;
+
+  .project.expanded .carousel-indicators {
+    display: flex;
+  }
+
+  /* Info en modo expandido: normal, no superpuesta */
+  .project.expanded .project-info-grid {
+    position: relative;
+    background: none;
+    padding: 8px 0 0 0;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .project.expanded .project-description {
+    display: block;
+    font-size: 12px;
+    line-height: 1.15;
+    font-weight: 400;
+    color: var(--black);
+  }
+
+  .project.expanded .project-title {
+    font-size: 12px;
+    line-height: 1.15;
+    font-weight: 400;
+    color: var(--black);
+  }
+
+  .project.expanded .project-number {
+    font-size: 12px;
+    line-height: 1.15;
+    font-weight: 400;
+    color: var(--black);
+  }
+
+  .project.expanded .project-left {
+    flex-direction: row;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  /* Botón cerrar visible en expandido */
+  .project.expanded .project-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.08);
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--black);
+    z-index: 501;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    backdrop-filter: blur(8px);
+  }
+
+  .project.expanded .project-close-btn:active {
+    background: rgba(0, 0, 0, 0.15);
+    transform: scale(0.95);
+  }
+
+  /* === ESTILOS BIO / INFO / CONTACTO (sin cambios) === */
+  .contact-collab {
+    margin-bottom: 4px;
+    margin-top: 14px;
+  }
+
+  .contact-section {
+    margin-bottom: 12px;
+    margin-top: -2px;
+  }
+
+  .right-bio-panel .time-section {
+    display: none;
+  }
+
+  /* Mostrar micrográficos en panel central */
+  .mobile-micros-center {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas: "date clock weather";
+    align-items: end;
+    gap: 8px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .mobile-micros-center-left {
+    grid-area: date;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-self: start;
+    align-items: flex-start;
+  }
+
+  .mobile-micros-center-right {
+    grid-area: weather;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    justify-self: end;
+  }
+
+  .mobile-micros-center-line {
+    font-size: 10px;
+    line-height: 1.45;
+    color: var(--gray);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+  }
+
+  .bio-text {
+    font-size: 12px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .bio-section {
+    margin-bottom: 6px;
+  }
+
+  .studio-name {
+    font-size: 12px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .info-section {
+    margin-bottom: 16px;
+  }
+
+  .info-title {
+    font-size: 12px;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+
+  .info-item.compact a {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.15 !important;
+    color: var(--black);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .info-item.compact a:hover {
+    color: var(--accent-magenta);
+  }
+
+  .info-item {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.15 !important;
+    margin-bottom: 4px;
+  }
+
+  .info-description {
+    font-size: 12px;
+    line-height: 1.15;
+  }
+
+  .contact-link {
+    font-size: 12px;
+    margin-bottom: 0;
+    display: inline;
+    white-space: nowrap;
+    line-height: 1.15;
+  }
+
+  .contact-collab {
+    font-size: 12px;
+  }
+
+  .sound-player-full {
+    padding: 6px;
+  }
+
+  .sound-channel-item {
+    font-size: 12px;
+    line-height: 1.15;
+    padding: 5px 6px;
+  }
+
+  .sound-brand {
+    font-size: 12px;
+    color: var(--black);
+  }
+
+  .carousel-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .time-section {
+    padding-top: 16px;
+    gap: 8px;
+  }
+
+  .update-date,
+  .live-clock,
+  .weather-info,
+  .location,
+  .weather-temp,
+  .mobile-micros-center-line {
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+  /* Mobile: desactivar reveal en tarjetas (respeta rotación y transiciones nativas) */
+  body.has-scroll-init .left-projects-panel .project[data-scroll] {
+    opacity: 1 !important;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.4s ease,
+                border-radius 0.4s ease,
+                width 0.4s ease,
+                height 0.4s ease !important;
+  }
+
+  body.has-scroll-init .left-projects-panel .project[data-scroll]:not(.expanded):nth-child(odd) {
+    transform: rotate(-2deg) !important;
+  }
+
+  body.has-scroll-init .left-projects-panel .project[data-scroll]:not(.expanded):nth-child(even) {
+    transform: rotate(2.5deg) !important;
+  }
+
+  body.has-scroll-init .left-projects-panel .project[data-scroll].expanded {
+    transform: rotate(0deg) !important;
+  }
+}
+
+/* ===== LOCOMOTIVE SCROLL — REVEAL ANIMATIONS ===== */
+/* Solo activar cuando LS está inicializado (evita FOUC) */
+body.has-scroll-init [data-scroll] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+body.has-scroll-init [data-scroll].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Delays escalonados para info sections */
+body.has-scroll-init .info-section[data-scroll]:nth-child(1) { transition-delay: 0s; }
+body.has-scroll-init .info-section[data-scroll]:nth-child(2) { transition-delay: 0.08s; }
+body.has-scroll-init .info-section[data-scroll]:nth-child(3) { transition-delay: 0.16s; }
+body.has-scroll-init .info-section[data-scroll]:nth-child(4) { transition-delay: 0.24s; }
+body.has-scroll-init .info-section[data-scroll]:nth-child(5) { transition-delay: 0.32s; }
+body.has-scroll-init .info-section[data-scroll]:nth-child(6) { transition-delay: 0.4s; }
+
+/* Proyectos: reveal sutil */
+body.has-scroll-init .project[data-scroll] {
+  transform: translateY(40px);
+  transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+body.has-scroll-init .project[data-scroll].is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== NAVIGATION ===== */
+.sidebar-left {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--sidebar-left-width);
+  height: 100vh;
+  padding: 20px 20px 30px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  z-index: 999;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.sidebar-button {
+  font-family: 'ABCDiatypeMono', monospace;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0;
+  line-height: 1.0;
+  pointer-events: auto;
+}
+
+.sidebar-button:hover {
+  text-decoration: underline;
+}
+
+.top-nav {
+  position: fixed;
+  top: 20px;
+  left: var(--sidebar-left-width);
+  right: 32px;
+  padding: 0 20px;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.nav-title {
+  font-family: 'ABCDiatypeMono', monospace;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  line-height: 1.0;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.nav-title:hover {
+  text-decoration: underline;
+}
+
+.nav-title.active {
+  text-decoration: underline;
+}
+
+.nav-title-line {
+  display: block;
+}
+
+.nav-email-label {
+  display: block;
+  font-family: 'ABCDiatypeMono', monospace;
+  font-size: 14px;
+  font-weight: 400;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-decoration: none;
+  pointer-events: none;
+  margin-top: 6px;
+}
+
+.time-colon {
+  animation: blink-colon 1s step-end infinite;
+}
+
+@keyframes blink-colon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ===== CONTENT SECTIONS ===== */
+.content-section {
+  margin-left: var(--sidebar-left-width);
+  width: calc(100% - var(--sidebar-left-width));
+  min-height: 100vh;
+  padding: 120px 32px 100px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.content-section.hidden {
+  display: none;
+}
+
+.section-inner {
+  max-width: 100%;
+}
+
+.section-placeholder {
+  font-family: 'ABCDiatypeMono', monospace;
+  font-size: 14px;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.section-placeholder.spam-label {
+  color: #FFFFFF;
+}
+
+/* Body backgrounds per section */
+body.spam-active {
+  background-color: #000000;
+}
+
+body.info-active {
+  background-color: #BCBDC8;
+}
+
+body.playground-active {
+  background-color: #FFFFFF;
+}
+
+body.pignatta-active {
+  background-color: #1a1a1a;
+}
+
+/* ===== IMAGE TRAIL ===== */
+.image-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 998;
+  overflow: hidden;
+}
+
+.trail-img {
+  position: absolute;
+  width: 200px;
+  height: auto;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(0.8) rotate(0deg);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ===== NAVIGATION MOBILE OVERRIDES ===== */
+@media (max-width: 768px) {
+  .sidebar-left,
+  .top-nav {
+    display: none;
+  }
+
+  .main-container {
+    margin-left: 0;
+    width: 100vw;
+  }
+
+  .content-section {
+    margin-left: 0;
+    width: 100%;
   }
 }
