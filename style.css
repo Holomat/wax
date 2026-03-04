@@ -26,6 +26,11 @@
   padding: 0;
 }
 
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   font-family: 'ABCDiatypeMono', monospace;
   font-size: 14px;
@@ -33,6 +38,7 @@ body {
   color: var(--black);
   background: var(--white);
   overflow-x: hidden;
+  max-width: 100vw;
   font-weight: 400;
   transition: background-color 0.5s ease;
 }
