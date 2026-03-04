@@ -514,6 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCarousels();
     soundSelectChannel(0);
     initLocoScroll();
+    initCardParallax();
     console.log('✅ Inicialización completa');
   }, 100);
 });
@@ -665,6 +666,65 @@ function initLocoScroll() {
   });
 
   console.log(`✅ Locomotive Scroll inicializado (${isDesktop ? 'desktop: panels + reveal' : 'mobile: smooth + reveal'})`);
+}
+
+// ===== MOBILE CARD PARALLAX (KINETIC LOCOMOTION) =====
+function initCardParallax() {
+  if (window.innerWidth > 1024) return;
+
+  const cards = document.querySelectorAll('.project[data-card-index]');
+  if (!cards.length) return;
+
+  const cardData = Array.from(cards).map(card => ({
+    el: card,
+    label: card.querySelector('.card-label'),
+    thumb: card.querySelector('.card-thumb'),
+    labelSpeed: 0.15,
+    thumbSpeed: 0.08,
+  }));
+
+  let ticking = false;
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+
+    requestAnimationFrame(() => {
+      const viewportCenter = window.innerHeight / 2;
+
+      cardData.forEach(data => {
+        if (data.el.classList.contains('expanded')) return;
+
+        const rect = data.el.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const offset = cardCenter - viewportCenter;
+
+        if (data.label) {
+          const labelY = offset * data.labelSpeed;
+          data.label.style.transform = `translateY(${labelY}px)`;
+        }
+
+        if (data.thumb && !data.el.classList.contains('expanded')) {
+          const thumbY = offset * data.thumbSpeed;
+          const isInView = data.el.classList.contains('is-inview');
+          const scale = isInView ? 1 : 0.85;
+          data.thumb.style.transform = `translateY(${thumbY}px) scale(${scale})`;
+        }
+      });
+
+      ticking = false;
+    });
+  }
+
+  // Use Lenis scroll event if available
+  if (locoScroll && locoScroll.lenis) {
+    locoScroll.lenis.on('scroll', onScroll);
+  } else {
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  onScroll();
+  console.log('✅ Card parallax inicializado');
 }
 
 console.log('Script cargado - v8.0 Locomotive Scroll');
@@ -898,6 +958,7 @@ window.addEventListener('resize', () => {
     if (currentMode !== lastScreenMode) {
       lastScreenMode = currentMode;
       initLocoScroll();
+      initCardParallax();
     }
   }, 200);
 });

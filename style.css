@@ -12,6 +12,20 @@
   --player-button: #f7f5f3;
   --player-button-hover: #f2f0ee;
   --player-channel: #f5f3f1;
+
+  /* Card colors - scattered pile */
+  --card-bg-1: #E8DDD3;
+  --card-text-1: #C9B8A8;
+  --card-bg-2: #1A1A1A;
+  --card-text-2: #333333;
+  --card-bg-3: #D4A89C;
+  --card-text-3: #B8887A;
+  --card-bg-4: #B8C4B8;
+  --card-text-4: #96A896;
+  --card-bg-5: #C5BCCE;
+  --card-text-5: #A699B2;
+  --card-bg-6: #F2EDE8;
+  --card-text-6: #D8CFC5;
 }
 
 /* Ocultar micrográficos móviles en desktop */
@@ -988,7 +1002,7 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     order: 3;
   }
 
-  /* === PANEL DE PROYECTOS — TARJETAS HORIZONTALES === */
+  /* === PANEL DE PROYECTOS — PILA VERTICAL SCATTERED === */
   .left-projects-panel {
     width: 100%;
     height: auto;
@@ -997,115 +1011,110 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     order: 2;
     border-bottom: 1px solid #eee;
     display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 0 24px;
-    gap: 14px;
-    padding: 28px 24px 32px 24px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    flex-direction: column;
     align-items: center;
-  }
-
-  .left-projects-panel::-webkit-scrollbar {
-    display: none;
+    overflow: visible;
+    padding: 40px 0 80px 0;
   }
 
   /* === TARJETA DE PROYECTO (ESTADO CERRADO) === */
   .project {
-    flex: 0 0 68vw;
-    min-width: 68vw;
-    scroll-snap-align: center;
-    border-radius: 16px;
+    width: 78vw;
+    min-height: 52vh;
+    flex: none;
+    border-radius: 20px;
     overflow: hidden;
     position: relative;
-    height: 55vh;
     margin-bottom: 0;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.4s ease,
                 border-radius 0.4s ease,
-                width 0.4s ease,
-                height 0.4s ease;
+                opacity 0.4s ease;
   }
 
-  /* Rotación sutil alterna */
-  .project:nth-child(odd) {
-    transform: rotate(-2deg);
+  /* Overlap: negative margin except first */
+  .project + .project {
+    margin-top: -10vh;
   }
 
-  .project:nth-child(even) {
-    transform: rotate(2.5deg);
-  }
+  /* Z-index stacking: later cards on top */
+  .project[data-card-index="1"] { z-index: 1; }
+  .project[data-card-index="2"] { z-index: 2; }
+  .project[data-card-index="3"] { z-index: 3; }
+  .project[data-card-index="4"] { z-index: 4; }
+  .project[data-card-index="5"] { z-index: 5; }
+  .project[data-card-index="6"] { z-index: 6; }
 
-  .project:first-child {
-    margin-top: 0;
-    margin-left: 4px;
-  }
+  /* Per-card color backgrounds */
+  .project[data-card-index="1"] { background: var(--card-bg-1); }
+  .project[data-card-index="2"] { background: var(--card-bg-2); }
+  .project[data-card-index="3"] { background: var(--card-bg-3); }
+  .project[data-card-index="4"] { background: var(--card-bg-4); }
+  .project[data-card-index="5"] { background: var(--card-bg-5); }
+  .project[data-card-index="6"] { background: var(--card-bg-6); }
 
-  .project:last-child {
-    margin-right: 4px;
-  }
+  /* Per-card scattered rotations and offsets */
+  .project[data-card-index="1"] { transform: rotate(-2.5deg) translateX(-3vw); }
+  .project[data-card-index="2"] { transform: rotate(1.8deg) translateX(4vw); }
+  .project[data-card-index="3"] { transform: rotate(-1.2deg) translateX(-2vw); }
+  .project[data-card-index="4"] { transform: rotate(3deg) translateX(3vw); }
+  .project[data-card-index="5"] { transform: rotate(-2deg) translateX(-4vw); }
+  .project[data-card-index="6"] { transform: rotate(1.5deg) translateX(2vw); }
 
-  /* Cover: media ocupa toda la tarjeta */
-  .project .project-media {
-    width: 100%;
-    height: 100%;
+  /* === CARD LABEL — large tone-on-tone text === */
+  .card-label {
     position: absolute;
-    top: 0;
-    left: 0;
-    margin-bottom: 0;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    font-family: 'ABCDiatypeMono', monospace;
+    font-size: clamp(40px, 11vw, 64px);
+    font-weight: 500;
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    z-index: 1;
+    pointer-events: none;
+    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.4s ease;
   }
 
-  .project .project-media .project-carousel {
+  /* Per-card label colors (tone-on-tone) */
+  .project[data-card-index="1"] .card-label { color: var(--card-text-1); }
+  .project[data-card-index="2"] .card-label { color: var(--card-text-2); }
+  .project[data-card-index="3"] .card-label { color: var(--card-text-3); }
+  .project[data-card-index="4"] .card-label { color: var(--card-text-4); }
+  .project[data-card-index="5"] .card-label { color: var(--card-text-5); }
+  .project[data-card-index="6"] .card-label { color: var(--card-text-6); }
+
+  /* === CARD THUMBNAIL === */
+  .card-thumb {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 55%;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 2;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+    transform: scale(0.85);
+  }
+
+  .card-thumb img,
+  .card-thumb video {
     width: 100%;
-    height: 100%;
-  }
-
-  .project .project-media .carousel-track {
-    height: 100%;
-  }
-
-  .project .project-media .carousel-slide {
-    height: 100%;
-    cursor: default;
-  }
-
-  .project .project-media .carousel-slide img {
-    width: 100%;
-    height: 100%;
+    height: auto;
+    display: block;
     object-fit: cover;
+    aspect-ratio: 4 / 3;
   }
 
-  .project .project-media .single-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: default;
-  }
-
-  /* Video cover */
-  .project .square-video-container {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: auto;
-    margin-bottom: 0;
-  }
-
-  .project .square-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: default;
-  }
-
-  /* Card mode: permitir pan horizontal nativo (scroll-snap) */
-  .project:not(.expanded) .project-carousel {
-    touch-action: auto;
+  /* Hide full carousel media in card mode */
+  .project:not(.expanded) .project-media {
+    display: none;
   }
 
   /* Ocultar controles del carousel en modo tarjeta */
@@ -1117,45 +1126,50 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     display: none;
   }
 
-  /* Info superpuesta sobre la tarjeta */
-  .project .project-info-grid {
+  /* Info overlay on card — bottom-left, no gradient */
+  .project:not(.expanded) .project-info-grid {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 40px 16px 20px 16px;
-    background: linear-gradient(transparent 0%, rgba(0, 0, 0, 0.65) 100%);
-    z-index: 2;
+    bottom: 16px;
+    left: 20px;
+    right: auto;
+    padding: 0;
+    background: none;
+    z-index: 3;
     grid-template-columns: 1fr;
-    gap: 6px;
-    width: 100%;
+    gap: 4px;
+    width: auto;
   }
 
-  /* Ocultar descripción y categoría en modo tarjeta */
-  .project .project-description {
-    display: none;
-  }
-
-  .project .project-category {
-    display: none;
-  }
-
-  /* Textos blancos en modo tarjeta */
-  .project .project-title {
-    font-size: 14px;
+  /* Card title and number */
+  .project:not(.expanded) .project-title {
+    font-size: 13px;
     line-height: 1.2;
-    font-weight: 500;
-    color: #fff;
+    font-weight: 400;
+    color: var(--black);
   }
 
-  .project .project-number {
-    font-size: 11px;
+  .project:not(.expanded) .project-number {
+    font-size: 10px;
     line-height: 1.15;
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--gray);
   }
 
-  .project .project-left {
+  /* Dark card (#2): light text */
+  .project[data-card-index="2"]:not(.expanded) .project-title,
+  .project[data-card-index="2"]:not(.expanded) .project-number {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .project:not(.expanded) .project-description {
+    display: none;
+  }
+
+  .project:not(.expanded) .project-category {
+    display: none;
+  }
+
+  .project:not(.expanded) .project-left {
     flex-direction: row;
     gap: 8px;
     align-items: baseline;
@@ -1170,10 +1184,10 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     height: 100vh;
     z-index: 500;
     border-radius: 0;
-    background: var(--white);
+    background: var(--white) !important;
     overflow-y: auto;
     overflow-x: hidden;
-    transform: rotate(0deg) !important;
+    transform: rotate(0deg) translateX(0) !important;
     box-shadow: none;
     padding: 60px 16px 40px;
     scroll-snap-align: none;
@@ -1181,7 +1195,18 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     min-width: 100vw;
   }
 
+  /* Hide card-mode elements when expanded */
+  .project.expanded .card-label {
+    display: none;
+  }
+
+  .project.expanded .card-thumb {
+    display: none;
+  }
+
+  /* Show full media when expanded */
   .project.expanded .project-media {
+    display: block !important;
     position: relative;
     height: auto;
     width: 100%;
@@ -1437,26 +1462,68 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     line-height: 1.15;
   }
 
-  /* Mobile: desactivar reveal en tarjetas (respeta rotación y transiciones nativas) */
+  /* === REVEAL ANIMATIONS — Scattered pile entrance === */
+
+  /* Cards: hidden before reveal */
   body.has-scroll-init .left-projects-panel .project[data-scroll] {
-    opacity: 1 !important;
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                box-shadow 0.4s ease,
-                border-radius 0.4s ease,
-                width 0.4s ease,
-                height 0.4s ease !important;
+    opacity: 0;
+    transform: translateY(80px) rotate(0deg) scale(0.92);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
 
-  body.has-scroll-init .left-projects-panel .project[data-scroll]:not(.expanded):nth-child(odd) {
-    transform: rotate(-2deg) !important;
+  /* Staggered delays per card */
+  body.has-scroll-init .project[data-card-index="1"][data-scroll] { transition-delay: 0s; }
+  body.has-scroll-init .project[data-card-index="2"][data-scroll] { transition-delay: 0.12s; }
+  body.has-scroll-init .project[data-card-index="3"][data-scroll] { transition-delay: 0.24s; }
+  body.has-scroll-init .project[data-card-index="4"][data-scroll] { transition-delay: 0.36s; }
+  body.has-scroll-init .project[data-card-index="5"][data-scroll] { transition-delay: 0.48s; }
+  body.has-scroll-init .project[data-card-index="6"][data-scroll] { transition-delay: 0.6s; }
+
+  /* In-view: settle into natural rotation + offset */
+  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="1"] {
+    opacity: 1;
+    transform: rotate(-2.5deg) translateX(-3vw);
+  }
+  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="2"] {
+    opacity: 1;
+    transform: rotate(1.8deg) translateX(4vw);
+  }
+  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="3"] {
+    opacity: 1;
+    transform: rotate(-1.2deg) translateX(-2vw);
+  }
+  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="4"] {
+    opacity: 1;
+    transform: rotate(3deg) translateX(3vw);
+  }
+  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="5"] {
+    opacity: 1;
+    transform: rotate(-2deg) translateX(-4vw);
+  }
+  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="6"] {
+    opacity: 1;
+    transform: rotate(1.5deg) translateX(2vw);
   }
 
-  body.has-scroll-init .left-projects-panel .project[data-scroll]:not(.expanded):nth-child(even) {
-    transform: rotate(2.5deg) !important;
-  }
-
+  /* Expanded state override */
   body.has-scroll-init .left-projects-panel .project[data-scroll].expanded {
-    transform: rotate(0deg) !important;
+    opacity: 1 !important;
+    transform: rotate(0deg) translateX(0) scale(1) !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Card thumb entrance animation */
+  .project.is-inview:not(.expanded) .card-thumb {
+    transform: scale(1);
+  }
+
+  /* Card label hidden in desktop */
+  .card-label {
+    display: none;
+  }
+  .card-thumb {
+    display: none;
   }
 }
 

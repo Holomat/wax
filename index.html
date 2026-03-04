@@ -36,26 +36,13 @@
       display: block !important;
       user-select: none !important;
     }
-    /* En desktop: height auto. En mobile tarjeta: height 100% */
-    @media (min-width: 1025px) {
-      .carousel-slide img {
-        height: auto !important;
-      }
+    .carousel-slide img {
+      height: auto !important;
     }
     @media (max-width: 1024px) {
-      .project:not(.expanded) .carousel-slide img {
-        height: 100% !important;
-        object-fit: cover !important;
-      }
       .project.expanded .carousel-slide img {
         height: auto !important;
         object-fit: contain !important;
-      }
-      .project:not(.expanded) .carousel-slide {
-        height: 100% !important;
-      }
-      .project:not(.expanded) .carousel-track {
-        height: 100% !important;
       }
     }
   </style>
@@ -144,8 +131,12 @@
     <!-- Panel Izquierdo - Proyectos -->
     <div class="left-projects-panel">
       
-      <div class="project" data-scroll>
+      <div class="project" data-scroll data-card-index="1">
         <button class="project-close-btn" onclick="collapseProject(event)">×</button>
+        <div class="card-label">Holomate</div>
+        <div class="card-thumb">
+          <img src="https://i.imgur.com/GlaO5F9.jpeg" alt="Holomate preview">
+        </div>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -181,7 +172,7 @@
             <div class="carousel-indicators"></div>
           </div>
         </div>
-        
+
         <div class="project-info-grid">
           <div class="project-left">
             <div class="project-number">[01]</div>
@@ -198,8 +189,12 @@ con experiencia digital para la creación musical colaborativa.
         </div>
       </div>
 
-      <div class="project" data-scroll>
+      <div class="project" data-scroll data-card-index="2">
         <button class="project-close-btn" onclick="collapseProject(event)">×</button>
+        <div class="card-label">Holomate Play</div>
+        <div class="card-thumb">
+          <img src="https://i.imgur.com/sELz8tj.jpeg" alt="Holomate Play preview">
+        </div>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -237,8 +232,14 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project" data-scroll>
+      <div class="project" data-scroll data-card-index="3">
         <button class="project-close-btn" onclick="collapseProject(event)">×</button>
+        <div class="card-label">Identidad Visual</div>
+        <div class="card-thumb">
+          <video autoplay loop muted playsinline>
+            <source src="https://i.imgur.com/lM5fRyp.mp4" type="video/mp4">
+          </video>
+        </div>
         <div class="project-media square-video-container">
           <video class="square-video" autoplay loop muted playsinline onclick="if(window.innerWidth > 768) openLightboxVideo(this.src)">
             <source src="https://i.imgur.com/lM5fRyp.mp4" type="video/mp4">
@@ -264,8 +265,12 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project" data-scroll>
+      <div class="project" data-scroll data-card-index="4">
         <button class="project-close-btn" onclick="collapseProject(event)">×</button>
+        <div class="card-label">Ferias Departa&shy;mentales</div>
+        <div class="card-thumb">
+          <img src="https://i.imgur.com/AFZpR1x.jpeg" alt="Ferias Departamentales preview">
+        </div>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -304,8 +309,12 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project" data-scroll>
+      <div class="project" data-scroll data-card-index="5">
         <button class="project-close-btn" onclick="collapseProject(event)">×</button>
+        <div class="card-label">Feria Nacional</div>
+        <div class="card-thumb">
+          <img src="https://i.imgur.com/zDWUWPv.jpeg" alt="Feria Nacional preview">
+        </div>
         <div class="project-media">
           <div class="project-carousel">
             <div class="carousel-track">
@@ -341,8 +350,12 @@ para conectarse directamente con el controlador Holomate o usarse de forma indep
         </div>
       </div>
 
-      <div class="project" data-scroll>
+      <div class="project" data-scroll data-card-index="6">
         <button class="project-close-btn" onclick="collapseProject(event)">×</button>
+        <div class="card-label">Afiche</div>
+        <div class="card-thumb">
+          <img src="https://i.imgur.com/ZpTQBFH.jpeg" alt="Afiche preview">
+        </div>
         <div class="project-media">
           <img src="https://i.imgur.com/ZpTQBFH.jpeg" alt="Identidad visual" class="single-image" onclick="if(window.innerWidth > 768) openLightbox('https://i.imgur.com/ZpTQBFH.jpeg')">
         </div>
