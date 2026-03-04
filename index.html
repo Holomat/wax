@@ -57,39 +57,41 @@
     }
   </style>
   
-  <!-- MOBILE CRITICAL CSS (inline para garantizar aplicación) -->
+  <!-- MOBILE-FIRST: default es mobile, desktop se activa con min-width -->
   <style>
-    @media (max-width: 768px) {
-      .top-nav { display: none !important; }
+    .top-nav { display: none !important; }
+    .main-container {
+      flex-direction: column !important;
+      height: auto !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+    }
+    .left-projects-panel,
+    .center-info-panel,
+    .right-bio-panel {
+      width: 100% !important;
+      height: auto !important;
+      flex: none !important;
+    }
+    @media (min-width: 769px) {
+      .top-nav { display: flex !important; }
       .main-container {
-        flex-direction: column !important;
-        height: auto !important;
-        min-height: 100vh !important;
-        width: 100% !important;
-      }
-      .left-projects-panel,
-      .center-info-panel,
-      .right-bio-panel {
-        width: 100% !important;
-        height: auto !important;
-        flex: none !important;
+        flex-direction: row !important;
+        height: 100vh !important;
+        width: 100vw !important;
+        overflow: hidden !important;
       }
       .left-projects-panel {
-        display: flex !important;
-        flex-direction: row !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        scroll-snap-type: x mandatory !important;
-        gap: 14px !important;
-        padding: 28px 24px 32px 24px !important;
+        flex: 0 0 40.74% !important;
+        width: 40.74vw !important;
+        height: calc(100vh - 40px) !important;
       }
-      .project {
-        flex: 0 0 68vw !important;
-        min-width: 68vw !important;
-        height: 55vh !important;
-        position: relative !important;
-        border-radius: 16px !important;
-        scroll-snap-align: center !important;
+      .center-info-panel,
+      .right-bio-panel {
+        flex: 0 0 29.63% !important;
+        width: 29.63vw !important;
+        height: calc(100vh - 40px) !important;
       }
     }
   </style>
