@@ -562,7 +562,7 @@ body {
 }
 
 /* En móvil: forzar coherencia con bio */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .info-item a {
     font-size: 12px !important;
     font-weight: 400 !important;
@@ -940,7 +940,7 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
 }
 
 /* ===== RESPONSIVE MÓVIL ===== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   body {
     font-size: 12px;
     line-height: 1.15;
@@ -1641,7 +1641,7 @@ body.pignatta-active {
 }
 
 /* ===== NAVIGATION MOBILE OVERRIDES ===== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .top-nav {
     display: none;
   }

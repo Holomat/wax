@@ -287,7 +287,7 @@ class SimpleCarousel {
   
   // Verificar si el carousel está en modo tarjeta (no expandido) en mobile
   isCardMode() {
-    if (window.innerWidth > 768) return false;
+    if (window.innerWidth > 1024) return false;
     const project = this.carousel.closest('.project');
     return project && !project.classList.contains('expanded');
   }
@@ -410,7 +410,7 @@ class SimpleCarousel {
     // Lightbox solo en desktop
     this.slides.forEach(slide => {
       slide.addEventListener('click', (e) => {
-        if (!this.hasMovedHorizontally && window.innerWidth > 768) {
+        if (!this.hasMovedHorizontally && window.innerWidth > 1024) {
           const img = slide.querySelector('img');
           if (img?.src) {
             openLightbox(img.src, this.carousel);
@@ -427,7 +427,7 @@ let currentLightboxSlide = 0;
 let lightboxSlides = [];
 
 function openLightbox(imageSrc, carouselElement = null) {
-  if (!imageSrc || window.innerWidth <= 768) return;
+  if (!imageSrc || window.innerWidth <= 1024) return;
   
   const lightbox = document.getElementById('lightbox');
   const lightboxImage = document.getElementById('lightboxImage');
@@ -619,7 +619,7 @@ function initPanelSmoothScroll() {
   smoothPanels.forEach(p => p.destroy());
   smoothPanels = [];
 
-  if (window.innerWidth <= 768) return;
+  if (window.innerWidth <= 1024) return;
 
   document.querySelectorAll('.left-projects-panel, .center-info-panel, .right-bio-panel').forEach(panel => {
     smoothPanels.push(new SmoothPanel(panel));
@@ -641,7 +641,7 @@ function initLocoScroll() {
     document.body.classList.remove('has-scroll-init');
   }
 
-  const isDesktop = window.innerWidth > 768;
+  const isDesktop = window.innerWidth > 1024;
 
   locoScroll = new LocomotiveScroll({
     lenisOptions: {
@@ -672,7 +672,7 @@ console.log('Web diseñada por Pignatta - Codificada con IA como copiloto');
 
 // ===== LIGHTBOX VIDEO =====
 function openLightboxVideo(videoSrc) {
-  if (!videoSrc || window.innerWidth <= 768) return;
+  if (!videoSrc || window.innerWidth <= 1024) return;
   
   const lightbox = document.getElementById('lightbox');
   const lightboxImage = document.getElementById('lightboxImage');
@@ -728,7 +728,7 @@ closeLightbox = function() {
 let expandedProject = null;
 
 function isMobile() {
-  return window.innerWidth <= 768;
+  return window.innerWidth <= 1024;
 }
 
 // --- Constantes de gestos ---
@@ -884,7 +884,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Re-inicializar en resize (por si cambia de desktop a mobile)
 let resizeTimeout;
-let lastScreenMode = window.innerWidth > 768 ? 'desktop' : 'mobile';
+let lastScreenMode = window.innerWidth > 1024 ? 'desktop' : 'mobile';
 
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimeout);
@@ -894,7 +894,7 @@ window.addEventListener('resize', () => {
     }
 
     // Reinicializar LS si cambió de modo desktop <-> mobile
-    const currentMode = window.innerWidth > 768 ? 'desktop' : 'mobile';
+    const currentMode = window.innerWidth > 1024 ? 'desktop' : 'mobile';
     if (currentMode !== lastScreenMode) {
       lastScreenMode = currentMode;
       initLocoScroll();
