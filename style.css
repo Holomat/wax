@@ -1015,7 +1015,7 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     overflow-x: auto;
     overflow-y: visible;
     scroll-snap-type: x mandatory;
-    scroll-padding: 0 calc((100vw - 32vw) / 2);
+    scroll-padding: 0 calc((100vw - 36vw) / 2);
     gap: 10px;
     padding: 60px 0 60px 0;
     -webkit-overflow-scrolling: touch;
@@ -1033,16 +1033,16 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
   .left-projects-panel::before,
   .left-projects-panel::after {
     content: '';
-    flex: 0 0 calc((100vw - 32vw) / 2 - 5px);
+    flex: 0 0 calc((100vw - 36vw) / 2 - 5px);
     height: 1px;
   }
 
   /* === TARJETA DE PROYECTO (ESTADO CERRADO) === */
   .project {
-    flex: 0 0 32vw;
-    min-width: 32vw;
+    flex: 0 0 36vw;
+    min-width: 36vw;
     height: auto;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 5 / 6;
     scroll-snap-align: center;
     border-radius: 14px;
     overflow: hidden;
