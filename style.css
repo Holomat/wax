@@ -1002,7 +1002,7 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     order: 3;
   }
 
-  /* === PANEL DE PROYECTOS — PILA VERTICAL SCATTERED === */
+  /* === PANEL DE PROYECTOS — CAROUSEL HORIZONTAL CURVO === */
   .left-projects-panel {
     width: 100%;
     height: auto;
@@ -1011,41 +1011,48 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     order: 2;
     border-bottom: 1px solid #eee;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 calc((100vw - 65vw) / 2);
+    gap: 16px;
+    padding: 40px 0 48px 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     align-items: center;
-    overflow: visible;
-    padding: 40px 0 80px 0;
+    perspective: 800px;
+  }
+
+  .left-projects-panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Padding spacers para centrar primera y ultima tarjeta */
+  .left-projects-panel::before,
+  .left-projects-panel::after {
+    content: '';
+    flex: 0 0 calc((100vw - 65vw) / 2 - 8px);
+    height: 1px;
   }
 
   /* === TARJETA DE PROYECTO (ESTADO CERRADO) === */
   .project {
-    width: 78vw;
-    min-height: 52vh;
-    flex: none;
-    border-radius: 20px;
+    flex: 0 0 65vw;
+    min-width: 65vw;
+    height: 55vh;
+    scroll-snap-align: center;
+    border-radius: 24px;
     overflow: hidden;
     position: relative;
     margin-bottom: 0;
     cursor: pointer;
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s ease,
-                border-radius 0.4s ease,
-                opacity 0.4s ease;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s ease;
+    transform-origin: center bottom;
   }
-
-  /* Overlap: negative margin except first */
-  .project + .project {
-    margin-top: -10vh;
-  }
-
-  /* Z-index stacking: later cards on top */
-  .project[data-card-index="1"] { z-index: 1; }
-  .project[data-card-index="2"] { z-index: 2; }
-  .project[data-card-index="3"] { z-index: 3; }
-  .project[data-card-index="4"] { z-index: 4; }
-  .project[data-card-index="5"] { z-index: 5; }
-  .project[data-card-index="6"] { z-index: 6; }
 
   /* Per-card color backgrounds */
   .project[data-card-index="1"] { background: var(--card-bg-1); }
@@ -1055,30 +1062,20 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
   .project[data-card-index="5"] { background: var(--card-bg-5); }
   .project[data-card-index="6"] { background: var(--card-bg-6); }
 
-  /* Per-card scattered rotations and offsets */
-  .project[data-card-index="1"] { transform: rotate(-2.5deg) translateX(-3vw); }
-  .project[data-card-index="2"] { transform: rotate(1.8deg) translateX(4vw); }
-  .project[data-card-index="3"] { transform: rotate(-1.2deg) translateX(-2vw); }
-  .project[data-card-index="4"] { transform: rotate(3deg) translateX(3vw); }
-  .project[data-card-index="5"] { transform: rotate(-2deg) translateX(-4vw); }
-  .project[data-card-index="6"] { transform: rotate(1.5deg) translateX(2vw); }
-
-  /* === CARD LABEL — large tone-on-tone text === */
+  /* === CARD LABEL — title at top, Inter Regular === */
   .card-label {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    right: 24px;
-    font-family: 'ABCDiatypeMono', monospace;
-    font-size: clamp(40px, 11vw, 64px);
-    font-weight: 500;
-    line-height: 0.9;
-    text-transform: uppercase;
-    letter-spacing: -0.03em;
-    z-index: 1;
+    position: relative;
+    top: auto;
+    left: auto;
+    padding: 24px 24px 0 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(28px, 7vw, 42px);
+    font-weight: 400;
+    line-height: 1.0;
+    text-transform: none;
+    letter-spacing: -0.02em;
+    z-index: 3;
     pointer-events: none;
-    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.4s ease;
   }
 
   /* Per-card label colors (tone-on-tone) */
@@ -1092,15 +1089,14 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
   /* === CARD THUMBNAIL === */
   .card-thumb {
     position: absolute;
-    bottom: 16px;
-    right: 16px;
-    width: 55%;
-    border-radius: 12px;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    border-radius: 16px;
     overflow: hidden;
     z-index: 2;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-    transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
-    transform: scale(0.85);
   }
 
   .card-thumb img,
@@ -1126,53 +1122,9 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     display: none;
   }
 
-  /* Info overlay on card — bottom-left, no gradient */
+  /* Hide project-info-grid in card mode (label replaces it) */
   .project:not(.expanded) .project-info-grid {
-    position: absolute;
-    bottom: 16px;
-    left: 20px;
-    right: auto;
-    padding: 0;
-    background: none;
-    z-index: 3;
-    grid-template-columns: 1fr;
-    gap: 4px;
-    width: auto;
-  }
-
-  /* Card title and number */
-  .project:not(.expanded) .project-title {
-    font-size: 13px;
-    line-height: 1.2;
-    font-weight: 400;
-    color: var(--black);
-  }
-
-  .project:not(.expanded) .project-number {
-    font-size: 10px;
-    line-height: 1.15;
-    font-weight: 400;
-    color: var(--gray);
-  }
-
-  /* Dark card (#2): light text */
-  .project[data-card-index="2"]:not(.expanded) .project-title,
-  .project[data-card-index="2"]:not(.expanded) .project-number {
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .project:not(.expanded) .project-description {
     display: none;
-  }
-
-  .project:not(.expanded) .project-category {
-    display: none;
-  }
-
-  .project:not(.expanded) .project-left {
-    flex-direction: row;
-    gap: 8px;
-    align-items: baseline;
   }
 
   /* === TARJETA EXPANDIDA === */
@@ -1462,63 +1414,21 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     line-height: 1.15;
   }
 
-  /* === REVEAL ANIMATIONS — Scattered pile entrance === */
-
-  /* Cards: hidden before reveal */
+  /* === REVEAL — Disable LS reveal for horizontal carousel cards === */
   body.has-scroll-init .left-projects-panel .project[data-scroll] {
-    opacity: 0;
-    transform: translateY(80px) rotate(0deg) scale(0.92);
-    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    opacity: 1 !important;
+    /* Transform is managed by JS for curve rotation */
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s ease !important;
   }
 
-  /* Staggered delays per card */
-  body.has-scroll-init .project[data-card-index="1"][data-scroll] { transition-delay: 0s; }
-  body.has-scroll-init .project[data-card-index="2"][data-scroll] { transition-delay: 0.12s; }
-  body.has-scroll-init .project[data-card-index="3"][data-scroll] { transition-delay: 0.24s; }
-  body.has-scroll-init .project[data-card-index="4"][data-scroll] { transition-delay: 0.36s; }
-  body.has-scroll-init .project[data-card-index="5"][data-scroll] { transition-delay: 0.48s; }
-  body.has-scroll-init .project[data-card-index="6"][data-scroll] { transition-delay: 0.6s; }
-
-  /* In-view: settle into natural rotation + offset */
-  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="1"] {
-    opacity: 1;
-    transform: rotate(-2.5deg) translateX(-3vw);
-  }
-  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="2"] {
-    opacity: 1;
-    transform: rotate(1.8deg) translateX(4vw);
-  }
-  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="3"] {
-    opacity: 1;
-    transform: rotate(-1.2deg) translateX(-2vw);
-  }
-  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="4"] {
-    opacity: 1;
-    transform: rotate(3deg) translateX(3vw);
-  }
-  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="5"] {
-    opacity: 1;
-    transform: rotate(-2deg) translateX(-4vw);
-  }
-  body.has-scroll-init .left-projects-panel .project[data-scroll].is-inview[data-card-index="6"] {
-    opacity: 1;
-    transform: rotate(1.5deg) translateX(2vw);
-  }
-
-  /* Expanded state override */
   body.has-scroll-init .left-projects-panel .project[data-scroll].expanded {
     opacity: 1 !important;
-    transform: rotate(0deg) translateX(0) scale(1) !important;
+    transform: rotate(0deg) !important;
     transition-delay: 0s !important;
   }
 
-  /* Card thumb entrance animation */
-  .project.is-inview:not(.expanded) .card-thumb {
-    transform: scale(1);
-  }
-
-  /* Card label hidden in desktop */
+  /* Card label & thumb hidden in desktop */
   .card-label {
     display: none;
   }

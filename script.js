@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCarousels();
     soundSelectChannel(0);
     initLocoScroll();
-    initCardParallax();
+    initCarouselCurve();
     console.log('✅ Inicialización completa');
   }, 100);
 });
@@ -668,63 +668,52 @@ function initLocoScroll() {
   console.log(`✅ Locomotive Scroll inicializado (${isDesktop ? 'desktop: panels + reveal' : 'mobile: smooth + reveal'})`);
 }
 
-// ===== MOBILE CARD PARALLAX (KINETIC LOCOMOTION) =====
-function initCardParallax() {
+// ===== MOBILE CAROUSEL CURVE ROTATION =====
+function initCarouselCurve() {
   if (window.innerWidth > 1024) return;
 
-  const cards = document.querySelectorAll('.project[data-card-index]');
+  const panel = document.querySelector('.left-projects-panel');
+  const cards = panel ? panel.querySelectorAll('.project[data-card-index]') : [];
   if (!cards.length) return;
 
-  const cardData = Array.from(cards).map(card => ({
-    el: card,
-    label: card.querySelector('.card-label'),
-    thumb: card.querySelector('.card-thumb'),
-    labelSpeed: 0.15,
-    thumbSpeed: 0.08,
-  }));
-
+  const MAX_ROTATION = 5; // degrees
   let ticking = false;
 
-  function onScroll() {
+  function updateRotations() {
     if (ticking) return;
     ticking = true;
 
     requestAnimationFrame(() => {
-      const viewportCenter = window.innerHeight / 2;
+      const panelCenter = panel.offsetWidth / 2;
 
-      cardData.forEach(data => {
-        if (data.el.classList.contains('expanded')) return;
+      cards.forEach(card => {
+        if (card.classList.contains('expanded')) return;
 
-        const rect = data.el.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height / 2;
-        const offset = cardCenter - viewportCenter;
+        const rect = card.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2 - panelRect.left;
 
-        if (data.label) {
-          const labelY = offset * data.labelSpeed;
-          data.label.style.transform = `translateY(${labelY}px)`;
-        }
+        // Normalize offset: -1 (left) to +1 (right)
+        const offset = (cardCenter - panelCenter) / panelCenter;
+        // Clamp to [-1, 1]
+        const clamped = Math.max(-1, Math.min(1, offset));
+        // Apply rotation: cards to the left rotate negative, cards to the right positive
+        const rotation = clamped * MAX_ROTATION;
+        // Slight vertical offset to simulate curve (cards at sides are lower)
+        const translateY = Math.abs(clamped) * 12;
 
-        if (data.thumb && !data.el.classList.contains('expanded')) {
-          const thumbY = offset * data.thumbSpeed;
-          const isInView = data.el.classList.contains('is-inview');
-          const scale = isInView ? 1 : 0.85;
-          data.thumb.style.transform = `translateY(${thumbY}px) scale(${scale})`;
-        }
+        card.style.transform = `rotate(${rotation}deg) translateY(${translateY}px)`;
       });
 
       ticking = false;
     });
   }
 
-  // Use Lenis scroll event if available
-  if (locoScroll && locoScroll.lenis) {
-    locoScroll.lenis.on('scroll', onScroll);
-  } else {
-    window.addEventListener('scroll', onScroll, { passive: true });
-  }
+  panel.addEventListener('scroll', updateRotations, { passive: true });
 
-  onScroll();
-  console.log('✅ Card parallax inicializado');
+  // Initial call
+  updateRotations();
+  console.log('✅ Carousel curve inicializado');
 }
 
 console.log('Script cargado - v8.0 Locomotive Scroll');
@@ -958,7 +947,7 @@ window.addEventListener('resize', () => {
     if (currentMode !== lastScreenMode) {
       lastScreenMode = currentMode;
       initLocoScroll();
-      initCardParallax();
+      initCarouselCurve();
     }
   }, 200);
 });
