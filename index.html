@@ -57,11 +57,48 @@
     }
   </style>
   
+  <!-- MOBILE CRITICAL CSS (inline para garantizar aplicación) -->
+  <style>
+    @media (max-width: 768px) {
+      .top-nav { display: none !important; }
+      .main-container {
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        width: 100% !important;
+      }
+      .left-projects-panel,
+      .center-info-panel,
+      .right-bio-panel {
+        width: 100% !important;
+        height: auto !important;
+        flex: none !important;
+      }
+      .left-projects-panel {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scroll-snap-type: x mandatory !important;
+        gap: 14px !important;
+        padding: 28px 24px 32px 24px !important;
+      }
+      .project {
+        flex: 0 0 68vw !important;
+        min-width: 68vw !important;
+        height: 55vh !important;
+        position: relative !important;
+        border-radius: 16px !important;
+        scroll-snap-align: center !important;
+      }
+    }
+  </style>
+
   <!-- LOCOMOTIVE SCROLL -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@5.0.1/bundled/locomotive-scroll.css">
 
   <!-- CSS PRINCIPAL -->
-  <link rel="stylesheet" href="style.css?v=20260302">
+  <link rel="stylesheet" href="style.css?v=20260303">
 </head>
 <body>
   <!-- Navigation -->
