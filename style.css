@@ -1512,19 +1512,19 @@ body.has-scroll-init .project[data-scroll].is-inview {
   left: 40px;
 }
 
-/* 2. work selected — inicio del panel derecho */
+/* 2. work selected — alineado con Educación (inicio center panel) */
 .nav-title:nth-child(2) {
-  left: calc(70.37vw + 24px);
+  left: calc(40.74vw + 24px);
 }
 
-/* 3. holomate play — entre work selected y playground */
+/* 3. holomate play — distribuido proporcionalmente */
 .nav-title:nth-child(3) {
-  left: calc(77.5vw);
+  left: calc(59vw);
 }
 
-/* 4. playground — entre holomate play y contacto */
+/* 4. playground — distribuido proporcionalmente */
 .nav-title:nth-child(4) {
-  left: calc(85vw);
+  left: calc(77vw);
 }
 
 /* 5. contacto & info — derecha */
