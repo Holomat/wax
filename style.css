@@ -1042,9 +1042,9 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     flex: 0 0 36vw;
     min-width: 36vw;
     height: auto;
-    aspect-ratio: 5 / 6;
+    aspect-ratio: 3 / 4;
     scroll-snap-align: center;
-    border-radius: 14px;
+    border-radius: 20px;
     overflow: hidden;
     position: relative;
     margin-bottom: 0;
@@ -1063,18 +1063,18 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
   .project[data-card-index="5"] { background: var(--card-bg-5); }
   .project[data-card-index="6"] { background: var(--card-bg-6); }
 
-  /* === CARD LABEL — title at top, Inter Regular === */
+  /* === CARD LABEL — title at top, Inter Semi-bold === */
   .card-label {
     position: relative;
     top: auto;
     left: auto;
-    padding: 12px 12px 0 12px;
+    padding: 20px 18px 0 18px;
     font-family: 'Inter', sans-serif;
-    font-size: clamp(14px, 3.8vw, 22px);
-    font-weight: 400;
-    line-height: 1.0;
+    font-size: clamp(20px, 5.5vw, 36px);
+    font-weight: 600;
+    line-height: 0.95;
     text-transform: none;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     z-index: 3;
     pointer-events: none;
   }
@@ -1090,14 +1090,13 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
   /* === CARD THUMBNAIL === */
   .card-thumb {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
     width: auto;
-    border-radius: 10px;
+    border-radius: 14px;
     overflow: hidden;
     z-index: 2;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   }
 
   .card-thumb img,
@@ -1106,7 +1105,7 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     height: auto;
     display: block;
     object-fit: cover;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 5 / 4;
   }
 
   /* Hide full carousel media in card mode */
