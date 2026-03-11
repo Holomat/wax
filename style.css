@@ -13,19 +13,19 @@
   --player-button-hover: #f2f0ee;
   --player-channel: #f5f3f1;
 
-  /* Card colors - scattered pile */
+  /* Card colors — bg + contrasted text */
   --card-bg-1: #E8DDD3;
-  --card-text-1: #C9B8A8;
+  --card-text-1: #A08E7A;
   --card-bg-2: #1A1A1A;
-  --card-text-2: #333333;
+  --card-text-2: #8C8279;
   --card-bg-3: #D4A89C;
-  --card-text-3: #B8887A;
+  --card-text-3: #8B4F3F;
   --card-bg-4: #B8C4B8;
-  --card-text-4: #96A896;
+  --card-text-4: #5E7A5E;
   --card-bg-5: #C5BCCE;
-  --card-text-5: #A699B2;
+  --card-text-5: #6E5F82;
   --card-bg-6: #F2EDE8;
-  --card-text-6: #D8CFC5;
+  --card-text-6: #A09589;
 }
 
 /* Ocultar micrográficos móviles en desktop */
@@ -1053,6 +1053,8 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
                 box-shadow 0.4s ease;
     transform-origin: center bottom;
+    display: flex;
+    flex-direction: column;
   }
 
   /* Per-card color backgrounds */
@@ -1089,11 +1091,8 @@ body.has-scroll-init .mobile-micros-center[data-scroll].is-inview {
 
   /* === CARD THUMBNAIL === */
   .card-thumb {
-    position: absolute;
-    bottom: 14px;
-    left: 14px;
-    right: 14px;
-    width: auto;
+    position: relative;
+    margin: auto 14px 14px 14px;
     border-radius: 14px;
     overflow: hidden;
     z-index: 2;
