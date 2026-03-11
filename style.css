@@ -1493,10 +1493,10 @@ body.has-scroll-init .project[data-scroll].is-inview {
 .nav-title {
   position: absolute;
   top: 40px;
-  font-family: 'ABCDiatypeMono', monospace;
+  font-family: 'Helvetica Now Display', Helvetica, Arial, sans-serif;
   font-size: 24px;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.5px;
   color: #FFFFFF;
   line-height: 1.0;
   text-decoration: none;
@@ -1544,6 +1544,17 @@ body.has-scroll-init .project[data-scroll].is-inview {
 
 .nav-title-line {
   display: block;
+}
+
+.nav-info-detail {
+  display: block;
+  font-family: 'ABCDiatypeMono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  margin-top: 6px;
+  pointer-events: none;
 }
 
 .time-colon {

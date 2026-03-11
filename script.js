@@ -559,7 +559,7 @@ class SmoothPanel {
     this.el = el;
     this.target = el.scrollTop;
     this.current = el.scrollTop;
-    this.ease = 0.03;
+    this.ease = 0.08;
     this.rafId = null;
 
     this.onWheel = this.onWheel.bind(this);
@@ -594,7 +594,7 @@ class SmoothPanel {
   update() {
     this.current += (this.target - this.current) * this.ease;
 
-    if (Math.abs(this.target - this.current) < 0.5) {
+    if (Math.abs(this.target - this.current) < 1) {
       this.current = this.target;
       this.el.scrollTop = this.current;
       this.rafId = null;
@@ -646,12 +646,14 @@ function initLocoScroll() {
 
   locoScroll = new LocomotiveScroll({
     lenisOptions: {
-      lerp: 0.03,
-      smoothWheel: !isDesktop, // Mobile: Lenis en body. Desktop: SmoothPanel en cada panel
+      lerp: 0.08,
+      duration: 1.2,
+      smoothWheel: !isDesktop,
       smoothTouch: false,
       normalizeWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
+      touchMultiplier: 1.5,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     }
   });
 
@@ -716,7 +718,20 @@ function initCarouselCurve() {
   console.log('✅ Carousel curve inicializado');
 }
 
-console.log('Script cargado - v8.0 Locomotive Scroll');
+// ===== HEADER TIME (Montevideo) =====
+function updateHeaderTime() {
+  const timeEl = document.getElementById('header-time');
+  if (!timeEl) return;
+  const now = new Date();
+  const options = { timeZone: 'America/Montevideo', hour: '2-digit', minute: '2-digit', hour12: false };
+  const time = now.toLocaleTimeString('es-UY', options);
+  const parts = time.split(':');
+  timeEl.innerHTML = parts[0] + '<span class="time-colon">:</span>' + parts[1];
+}
+updateHeaderTime();
+setInterval(updateHeaderTime, 1000);
+
+console.log('Script cargado - v9.0 Locomotive Scroll');
 console.log('Web diseñada por Pignatta - Codificada con IA como copiloto');
 
 // ===== LIGHTBOX VIDEO =====
