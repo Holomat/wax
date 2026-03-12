@@ -1507,27 +1507,27 @@ body.has-scroll-init .project[data-scroll].is-inview {
   text-align: left;
 }
 
-/* 1. Pignatta — izquierda, alineado con borde de imágenes */
+/* 1. Pignatta — izquierda */
 .nav-title:nth-child(1) {
   left: 40px;
 }
 
-/* 2. work selected — alineado con Educación (inicio center panel) */
+/* 2. Design — distribuido uniformemente */
 .nav-title:nth-child(2) {
-  left: calc(40.74vw + 24px);
+  left: calc(52vw);
 }
 
-/* 3. holomate play — distribuido proporcionalmente */
+/* 3. Holomate — distribuido uniformemente */
 .nav-title:nth-child(3) {
-  left: calc(59vw);
+  left: calc(64vw);
 }
 
-/* 4. playground — distribuido proporcionalmente */
+/* 4. Música — distribuido uniformemente */
 .nav-title:nth-child(4) {
-  left: calc(77vw);
+  left: calc(76vw);
 }
 
-/* 5. contacto & info — derecha */
+/* 5. Info — derecha */
 .nav-title:nth-child(5) {
   right: 40px;
   left: auto;
